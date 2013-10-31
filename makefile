@@ -10,7 +10,7 @@ clean:
 termcrate: build build/termcrate.o build/xterm_control.o build/keyboard.o
 	$(CC) build/termcrate.o build/xterm_control.o build/keyboard.o -o termcrate
 
-termcrate.o: src/termcrate.c
+build/termcrate.o: src/termcrate.c
 	$(CC) -c src/termcrate.c -o build/termcrate.o
 
 build/xterm_control.o: xterm/xterm_control.c
