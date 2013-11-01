@@ -13,25 +13,26 @@
 #define YVEL 2
 #define G = 1
 
-struct Enemy {
-    int xPos, yPos;
+typedef struct {
+	int xPos, 
+		yPos, 
+		rad; 	//radius
+} Geometry;
+
+typedef struct {
+	Geometry geo;
     int dirMotion;
     int alive;
-};
+} Actor;
 
-struct Bullet {
-    int xPos, yPos;
-    int dirMotion;
-};
+typedef struct {
+	Geometry geo;
+} Crate;
 
-struct Crate {
-    int xPos, yPos;
-};
-
-struct Player {
-    int xPos, yPos;
+typedef struct {
+	Geometry geo;
     int yVel;
-};
+} Player;
 
 void game();
 void config();

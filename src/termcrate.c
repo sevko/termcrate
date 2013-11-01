@@ -5,10 +5,14 @@
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
 
-struct Enemy * _enemies;
-struct Crate _crate;
-struct Player _player;
+Actor * _enemies;
+Actor * _bullets;
 
+Crate _crate;
+Player _player;
+
+int _numEnemies;
+int _numBullets;
 int _gameLost;
 
 void game(){
@@ -24,7 +28,7 @@ void config(){
 }
 
 void render(){
-
+	//screen drawing
 }
 
 void tick(){
@@ -34,11 +38,40 @@ void tick(){
 }
 
 void updateEnemies(){
+	int enem;
 
+	for(enem = 0; enem < _numEnemies; enem++){
+		mob = enemies[enem];
+		if(collision(mob.geo, _player.geo)){
+			_gameLost = 1; 	//player's dead
+			break;
+		}
+		enemyMove(mob);
+	}
+}
+
+//returns absolute value of val
+int abs(int val){
+	if(val < 0)
+		return val * -1;
+	return val;
+}
+
+//returns whether geo1 collided with geo2
+int collision(Geometry g1, Geometry g2){
+	int minDist = go1.radius + g2.radius;
+
+	//poor readibility for lazy eval
+	return abs(g1.yPos - g2.yPos) < minDist && abs(g1.xPos - g2.xPos) < minDist;
 }
 
 void updateBullet(){
-
+	int bull, enem;
+	for(bull = 0; bull < _numBullets; bull++){
+		for(enem = 0; enem < _numEnemies; enem++)
+			if(collision(_bullets[bull].geo, _enemies[enem].geo))
+				_enemies[enem].alive = _bullets[bull].alive = 0;
+	}
 }
 
 void updatePlayer(){
