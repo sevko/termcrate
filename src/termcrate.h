@@ -9,8 +9,11 @@
 #define QUIT KEY_F1
 
 #define PAUSE (1000000 / 60)
-#define XVEL 1
-#define YVEL 2
+#define PLAYER_XVEL 3
+#define PLAYER_YVEL 2
+#define ENEM_XVEL 2
+#define ENEM_YVEL 2
+#define BULL_XVEL 8
 #define G = 1
 
 typedef struct {
@@ -38,7 +41,19 @@ void game();
 void config();
 void render();
 void tick();
+int abs(int val);
+int collistion(Geometry g1, Geometry g2);
 void updateEnemies();
-void updateBullet();
+void updateBullets();
 void updatePlayer();
+int surfaceBottom(Geometry geo);
+int surfaceBottom(Geometry geo);
+int surfaceLeft(Geometry geo);
+int surfaceLeft(Gemoetry geo);
+void moveUp();
+void moveLeft();
+void moveRight();
+void gravity();
+void enemyMove(Actor enem);
+void bulletMove(Actor bull);
 void main();
