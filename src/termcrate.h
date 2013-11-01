@@ -16,12 +16,6 @@
 #define ENEM_YVEL 2
 #define BULL_XVEL 8
 
-
-#define MAP_WIDTH 176
-#define MAP_HEIGHT 44
-
-#define MAP_NAME "res/lvl1.map"
-
 typedef struct {
 	int x, 
 		y, 
@@ -45,9 +39,6 @@ typedef struct {
 
 void game();
 void config();
-
-void render();
-void scanMap();
 
 void tick();
 

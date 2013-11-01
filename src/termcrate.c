@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "../src/termcrate.h"
-#include "../xterm/keyboard.h"
-#include "../xterm/xterm_control.h"
+#include "src/termcrate.h"
+#include "src/graphics.h"
 
-char mapBuf[MAP_HEIGHT][MAP_WIDTH];
+#include "xterm/keyboard.h"
+#include "xterm/xterm_control.h"
+
 
 Actor * _enemies;
 Actor * _bullets;
@@ -20,6 +21,7 @@ int _gameLost;
 void game(){
     config();
     while(!_gameLost){
+		usleep(PAUSE);
         render();
         tick();
     }
@@ -28,19 +30,6 @@ void game(){
 void config(){
     _gameLost = 0;
 	scanMap();
-}
-
-void render(){
-	int row;
-	for(row = 0; row < MAP_HEIGHT; row++)
-		printf("%s", mapBuf[row]);
-}
-
-void scanMap(){
-	FILE * map = fopen(MAP_NAME, "r");
-
-	int row = 0;
-	while(fgets(mapBuf[row++], MAP_WIDTH, map));
 }
 
 void tick(){
@@ -173,7 +162,5 @@ void bulletMove(Actor bull) {
 }
 
 void main(){
-    //game();
-	scanMap();
-	render();
+    game();
 }
