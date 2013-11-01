@@ -1,24 +1,30 @@
-#define LEFT 1
-#define RIGHT 0
-
 #define MOVE_UP KEY_UP
 #define MOVE_LEFT KEY_LEFT
 #define MOVE_RIGHT KEY_RIGHT
-
 #define FIRE 'x'
 #define QUIT KEY_F1
 
 #define PAUSE (1000000 / 60)
+
+#define LEFT 1
+#define RIGHT 0
+#define G 1
+
 #define PLAYER_XVEL 3
 #define PLAYER_YVEL 2
 #define ENEM_XVEL 2
 #define ENEM_YVEL 2
 #define BULL_XVEL 8
-#define G = 1
+
+
+#define MAP_WIDTH 176
+#define MAP_HEIGHT 44
+
+#define MAP_NAME "res/lvl1.map"
 
 typedef struct {
-	int xPos, 
-		yPos, 
+	int x, 
+		y, 
 		rad; 	//radius
 } Geometry;
 
@@ -39,21 +45,31 @@ typedef struct {
 
 void game();
 void config();
+
 void render();
+void scanMap();
+
 void tick();
+
 int abs(int val);
 int collistion(Geometry g1, Geometry g2);
+
 void updateEnemies();
 void updateBullets();
 void updatePlayer();
+
 int surfaceBottom(Geometry geo);
 int surfaceBottom(Geometry geo);
 int surfaceLeft(Geometry geo);
-int surfaceLeft(Gemoetry geo);
+int surfaceLeft(Geometry geo);
+
 void moveUp();
 void moveLeft();
 void moveRight();
 void gravity();
+void fire();
+
 void enemyMove(Actor enem);
 void bulletMove(Actor bull);
+
 void main();

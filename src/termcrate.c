@@ -5,6 +5,8 @@
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
 
+char mapBuf[MAP_HEIGHT][MAP_WIDTH];
+
 Actor * _enemies;
 Actor * _bullets;
 
@@ -17,7 +19,7 @@ int _gameLost;
 
 void game(){
     config();
-    while(!gameLost()){
+    while(!_gameLost){
         render();
         tick();
     }
@@ -25,10 +27,20 @@ void game(){
 
 void config(){
     _gameLost = 0;
+	scanMap();
 }
 
 void render(){
-	//screen drawing
+	int row;
+	for(row = 0; row < MAP_HEIGHT; row++)
+		printf("%s", mapBuf[row]);
+}
+
+void scanMap(){
+	FILE * map = fopen(MAP_NAME, "r");
+
+	int row = 0;
+	while(fgets(mapBuf[row++], MAP_WIDTH, map));
 }
 
 void tick(){
@@ -46,16 +58,16 @@ int abs(int val){
 
 //returns whether geo1 collided with geo2
 int collision(Geometry g1, Geometry g2){
-    int minDist = go1.radius + g2.radius;
+    int minDist = g1.rad + g2.rad;
 
     //poor readibility for lazy eval
-    return abs(g1.yPos - g2.yPos) < minDist && abs(g1.xPos - g2.xPos) < minDist;
+    return abs(g1.y - g2.y) < minDist && abs(g1.x - g2.x) < minDist;
 }
 
 void updateEnemies(){
     int enem;
     for(enem = 0; enem < _numEnemies; enem++){
-        mob = enemies[enem];
+        Actor mob = _enemies[enem];
         if(collision(mob.geo, _player.geo)){
             _gameLost = 1; 	//player's dead
             break;
@@ -70,11 +82,12 @@ void updateBullets(){
         for(enem = 0; enem < _numEnemies; enem++)
             if(collision(_bullets[bull].geo, _enemies[enem].geo))
                 _enemies[enem].alive = _bullets[bull].alive = 0;
-        bulletMove(bullets[bull]);
+        bulletMove(_bullets[bull]);
     }
 }
 
 void updatePlayer(){
+	int key;
     if((key = getkey()) != KEY_NOTHING){
 
         if(key == MOVE_UP)
@@ -109,7 +122,7 @@ int surfaceLeft(Geometry geo) {
 }
 
 //Check if the _player is touching a surface on its right or correct if near enough
-int surfaceLeft(Gemoetry geo) {
+int surfaceRight(Geometry geo) {
 }
 
 void moveUp() {
@@ -133,10 +146,14 @@ void moveRight() {
 void gravity() {
     if(!surfaceBottom(_player.geo)) {
         _player.geo.y += _player.yVel;
-        _player.yVel -= G;
-    } else {
+		_player.yVel -= G;
+	} else {
         _player.yVel = 0;
     }
+}
+
+void fire(){
+	//fire bullets
 }
 
 void enemyMove(Actor enem) {
@@ -156,5 +173,7 @@ void bulletMove(Actor bull) {
 }
 
 void main(){
-    game();
+    //game();
+	scanMap();
+	render();
 }
