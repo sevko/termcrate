@@ -43,16 +43,17 @@ void config();
 void tick();
 
 int abs(int val);
-int collistion(Geometry g1, Geometry g2);
+int collision(Geometry g1, Geometry g2);
 
 void updateEnemies();
 void updateBullets();
+void updateDeathFlags();
 void updatePlayer();
 
 int surfaceBottom(Geometry geo);
-int surfaceBottom(Geometry geo);
+int surfaceTop(Geometry geo);
 int surfaceLeft(Geometry geo);
-int surfaceLeft(Geometry geo);
+int surfaceRight(Geometry geo);
 
 void moveUp();
 void moveLeft();

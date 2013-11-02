@@ -16,6 +16,7 @@ Player _player;
 
 int _numEnemies;
 int _numBullets;
+
 int _gameLost;
 
 void game(){
@@ -67,12 +68,37 @@ void updateEnemies(){
 
 void updateBullets(){
     int bull, enem;
+	int deadBull = 0, deadEnem = 0;
+
     for(bull = 0; bull < _numBullets; bull++){
         for(enem = 0; enem < _numEnemies; enem++)
-            if(collision(_bullets[bull].geo, _enemies[enem].geo))
-                _enemies[enem].alive = _bullets[bull].alive = 0;
+            if(collision(_bullets[bull].geo, _enemies[enem].geo) && _enemies[enem].alive){
+				_bullets[bull].alive = _enemies[enem].alive = 0;
+				deadBull++;
+				deadEnem++;
+			}
         bulletMove(_bullets[bull]);
     }
+
+	updateDeathFlags(_bullets, _numBullets, deadBull);
+	_numBullets -= deadBull;
+
+	updateDeathFlags(_enemies, _numEnemies, deadEnem);
+	_numEnemies -= deadEnem;
+}
+
+//removes dead Actors from actors array
+void updateDeathFlags(Actor ** oldActors, int numAct, int numDead){
+	Actor * newActors[numAct - numDead];
+	int oldAct, newAct = 0;
+
+	for(oldAct = 0; oldAct < numAct; oldAct++){
+		Actor mob = *oldActors[oldAct];
+		if(mob.alive)
+			newActors[newAct++] = oldActors[oldAct];
+	}
+
+	oldActors = newActors;
 }
 
 void updatePlayer(){
@@ -142,7 +168,7 @@ void gravity() {
 }
 
 void fire(){
-	//fire bullets
+
 }
 
 void enemyMove(Actor enem) {
