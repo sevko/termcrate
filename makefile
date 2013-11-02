@@ -1,8 +1,9 @@
-CC = gcc
+CC = gcc $(flags)
 flags = -I . -Ofast # add root dir to project include path; enable optimization
+xterm = xterm -geom 176x44 -name termcrate
 
 run: termcrate
-	./termcrate
+	$(xterm) ./termcrate
 
 clean: 
 	rm -rf build
@@ -12,10 +13,10 @@ termcrate: build build/termcrate.o build/graphics.o build/xterm_control.o build/
 	$(CC) build/termcrate.o build/graphics.o build/xterm_control.o build/keyboard.o -o termcrate
 
 build/termcrate.o: src/termcrate.c
-	$(CC) $(flags) -c src/termcrate.c -o build/termcrate.o
+	$(CC) -c src/termcrate.c -o build/termcrate.o
 
 build/graphics.o: src/graphics.c
-	$(CC) $(flags) -c src/graphics.c -o build/graphics.o
+	$(CC) -c src/graphics.c -o build/graphics.o
 
 build/xterm_control.o: xterm/xterm_control.c
 	$(CC) -c xterm/xterm_control.c -o build/xterm_control.o 

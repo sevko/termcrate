@@ -1,3 +1,8 @@
+/* 
+ * Macros
+*/
+
+
 #define MOVE_UP KEY_UP
 #define MOVE_LEFT KEY_LEFT
 #define MOVE_RIGHT KEY_RIGHT
@@ -16,26 +21,38 @@
 #define ENEM_YVEL 2
 #define BULL_XVEL 8
 
+
+/*
+ * Structs
+*/
+
+
 typedef struct {
 	int x, 
 		y, 
 		rad; 	//radius
-} Geometry;
+} Geometry_t;
 
 typedef struct {
 	Geometry geo;
     int dirMotion;
     int alive;
-} Actor;
+} Actor_t;
 
 typedef struct {
 	Geometry geo;
-} Crate;
+} Crate_t;
 
 typedef struct {
 	Geometry geo;
     int yVel;
-} Player;
+} Player_t;
+
+
+/*
+ * Functions
+*/
+
 
 void game();
 void config();

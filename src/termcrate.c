@@ -8,11 +8,11 @@
 #include "xterm/xterm_control.h"
 
 
-Actor * _enemies;
-Actor * _bullets;
+Actor_t * _enemies;
+Actor_t * _bullets;
 
-Crate _crate;
-Player _player;
+Crate_t _crate;
+Player_t _player;
 
 int _numEnemies;
 int _numBullets;
@@ -47,17 +47,17 @@ int abs(int val){
 }
 
 //returns whether geo1 collided with geo2
-int collision(Geometry g1, Geometry g2){
-    int minDist = g1.rad + g2.rad;
+int collision(Geometry_t g1, Geometry_t g2){
+    int sumRad = g1.rad + g2.rad;
 
     //poor readibility for lazy eval
-    return abs(g1.y - g2.y) < minDist && abs(g1.x - g2.x) < minDist;
+    return abs(g1.y - g2.y + 1) < sumRad && abs(g1.x - g2.x + 1) < sumRad;
 }
 
 void updateEnemies(){
     int enem;
     for(enem = 0; enem < _numEnemies; enem++){
-        Actor mob = _enemies[enem];
+        Actor_t mob = _enemies[enem];
         if(collision(mob.geo, _player.geo)){
             _gameLost = 1; 	//player's dead
             break;
@@ -87,18 +87,23 @@ void updateBullets(){
 	_numEnemies -= deadEnem;
 }
 
-//removes dead Actors from actors array
-void updateDeathFlags(Actor ** oldActors, int numAct, int numDead){
-	Actor * newActors[numAct - numDead];
+//removes dead Actor_ts from actors array
+void updateDeathFlags(Actor_t * oldActors, int numAct, int numDead){
+	Actor_t * newActors[numAct - numDead];
 	int oldAct, newAct = 0;
 
 	for(oldAct = 0; oldAct < numAct; oldAct++){
-		Actor mob = *oldActors[oldAct];
+		Actor_t mob = oldActors[oldAct];
 		if(mob.alive)
 			newActors[newAct++] = oldActors[oldAct];
 	}
 
 	oldActors = newActors;
+}
+
+void addActor(Actor_t * actors, Actor_t newActor, int numAct){
+	actors = realloc(actors, (numAct + 1) * sizeof(Actor_t));
+	actors[numAct] = newActor;
 }
 
 void updatePlayer(){
@@ -114,30 +119,38 @@ void updatePlayer(){
         else if(key == MOVE_RIGHT)
             moveRight();
 
-        else if(key == FIRE)
-            fire();
+        else if(key == FIRE){
+			fire();
 
         else if(key == QUIT)
-            _gameLost = 0;
+            _gameLost = 1;
 
         gravity();
     }
 }
 
-//Check if _player is on a surface or correct if near enough
-int surfaceBottom(Geometry geo) {
+//Check if geo is on a surface or correct if near enough
+int surfaceBottom(Geometry_t geo) {
+
 }
 
-//Check if _player is touching a sruface from the bottom or correct if near enough
-int surfaceTop(Geometry geo) {
+//Check if geo is touching a sruface from the bottom or correct if near enough
+int surfaceTop(Geometry_t geo) {
+
 }
 
-//Check if the _player is touching a surface on its left or correct if near enough
-int surfaceLeft(Geometry geo) {
+//Check if the geo is touching a surface on its left or correct if near enough
+int surfaceLeft(Geometry_t geo) {
+	if(geo.x - geo.rad < 1)
+		return 1;
+	return 0;
 }
 
-//Check if the _player is touching a surface on its right or correct if near enough
-int surfaceRight(Geometry geo) {
+//Check if the geo is touching a surface on its right or correct if near enough
+int surfaceRight(Geometry_t geo) {
+	if(geo.x >= 176)
+		return 1;
+	return 0;
 }
 
 void moveUp() {
@@ -168,10 +181,22 @@ void gravity() {
 }
 
 void fire(){
+	Geometry_t bullGeo = { 
+		.x = _player.geo.x, 
+		.y = _player.geo.y, 
+		.rad = BULLET_RADIUS
+	};
 
+	Actor_t bull = { 
+		.geo = bullGeo,
+		.dirMotion = RIGHT, //placeholder
+		.alive = 1
+	};
+
+	addBullet(_bullets, bull, _numBullets);
 }
 
-void enemyMove(Actor enem) {
+void enemyMove(Actor_t enem) {
     if(surfaceLeft(enem.geo) || surfaceRight(enem.geo)) {
         enem.dirMotion *= -1;
     } else if(!surfaceBottom(enem.geo)) {
@@ -180,7 +205,7 @@ void enemyMove(Actor enem) {
     enem.geo.x += ENEM_XVEL * enem.dirMotion;
 }
 
-void bulletMove(Actor bull) {
+void bulletMove(Actor_t bull) {
     if(surfaceLeft(bull.geo) || surfaceRight(bull.geo)) {
         bull.alive = 0;
     }
