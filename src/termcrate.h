@@ -19,7 +19,9 @@
 #define PLAYER_YVEL 2
 #define ENEM_XVEL 2
 #define ENEM_YVEL 2
+
 #define BULL_XVEL 8
+#define BULLET_RADIUS 1
 
 
 /*
@@ -34,17 +36,17 @@ typedef struct {
 } Geometry_t;
 
 typedef struct {
-	Geometry geo;
+	Geometry_t geo;
     int dirMotion;
     int alive;
 } Actor_t;
 
 typedef struct {
-	Geometry geo;
+	Geometry_t geo;
 } Crate_t;
 
 typedef struct {
-	Geometry geo;
+	Geometry_t geo;
     int yVel;
 } Player_t;
 
@@ -60,17 +62,17 @@ void config();
 void tick();
 
 int abs(int val);
-int collision(Geometry g1, Geometry g2);
+int collision(Geometry_t g1, Geometry_t g2);
 
 void updateEnemies();
 void updateBullets();
 void updateDeathFlags();
 void updatePlayer();
 
-int surfaceBottom(Geometry geo);
-int surfaceTop(Geometry geo);
-int surfaceLeft(Geometry geo);
-int surfaceRight(Geometry geo);
+int surfaceBottom(Geometry_t geo);
+int surfaceTop(Geometry_t geo);
+int surfaceLeft(Geometry_t geo);
+int surfaceRight(Geometry_t geo);
 
 void moveUp();
 void moveLeft();
@@ -78,7 +80,7 @@ void moveRight();
 void gravity();
 void fire();
 
-void enemyMove(Actor enem);
-void bulletMove(Actor bull);
+void enemyMove(Actor_t enem);
+void bulletMove(Actor_t bull);
 
 void main();

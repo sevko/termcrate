@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "src/termcrate.h"
 #include "src/graphics.h"
 
 #include "xterm/keyboard.h"
 #include "xterm/xterm_control.h"
-
 
 Actor_t * _enemies;
 Actor_t * _bullets;
@@ -88,12 +88,12 @@ void updateBullets(){
 }
 
 //removes dead Actor_ts from actors array
-void updateDeathFlags(Actor_t * oldActors, int numAct, int numDead){
+void updateDeathFlags(Actor_t ** oldActors, int numAct, int numDead){
 	Actor_t * newActors[numAct - numDead];
 	int oldAct, newAct = 0;
 
 	for(oldAct = 0; oldAct < numAct; oldAct++){
-		Actor_t mob = oldActors[oldAct];
+		Actor_t mob = *oldActors[oldAct];
 		if(mob.alive)
 			newActors[newAct++] = oldActors[oldAct];
 	}
@@ -119,7 +119,7 @@ void updatePlayer(){
         else if(key == MOVE_RIGHT)
             moveRight();
 
-        else if(key == FIRE){
+        else if(key == FIRE)
 			fire();
 
         else if(key == QUIT)
@@ -193,7 +193,7 @@ void fire(){
 		.alive = 1
 	};
 
-	addBullet(_bullets, bull, _numBullets);
+	addActor(_bullets, bull, _numBullets);
 }
 
 void enemyMove(Actor_t enem) {
