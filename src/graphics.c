@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-#include "src/termcrate.h"
-#include "src/graphics.h"
+#include "../src/termcrate.h"
+#include "../src/graphics.h"
 
-#include "xterm/keyboard.h"
-#include "xterm/xterm_control.h"
+#include "../xterm/keyboard.h"
+#include "../xterm/xterm_control.h"
 
 char mapBuf[MAP_HEIGHT][MAP_WIDTH];
 

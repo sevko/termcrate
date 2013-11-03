@@ -2,11 +2,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "src/termcrate.h"
-#include "src/graphics.h"
+#include "./termcrate.h"
+#include "./graphics.h"
 
-#include "xterm/keyboard.h"
-#include "xterm/xterm_control.h"
+#include "../xterm/keyboard.h"
+#include "../xterm/xterm_control.h"
 
 Actor_t * _enemies;
 Actor_t * _bullets;

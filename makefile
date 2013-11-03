@@ -1,5 +1,4 @@
-CC = gcc $(flags)
-flags = -I . -Ofast # add root dir to project include path; enable optimization
+CC = gcc
 xterm = xterm -geom 176x44 -name termcrate
 
 run: termcrate
