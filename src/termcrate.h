@@ -47,7 +47,6 @@ typedef struct {
 
 typedef struct {
 	Geometry_t geo;
-    int yVel;
 } Player_t;
 
 

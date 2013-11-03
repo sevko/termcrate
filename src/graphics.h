@@ -4,4 +4,14 @@
 #define MAP_NAME "res/lvl1.map"
 
 void render();
+void renderMap();
+void renderActors();
+
+void drawEnemy();
+void drawBullet();
+void drawCrate();
+void drawPlayer();
+
+void clearScreen();
+void resetCursor();
 void scanMap();
