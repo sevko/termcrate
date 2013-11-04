@@ -87,14 +87,17 @@ void scanMap(){
         while(i < MAP_HEIGHT) {
             int j = 0;
             int on_surface = 0;
+
             Geometry_t point1 = {
                 .x = -1,
                 .y = -1
             };
+
             Geometry_t point2 = {
                 .x = -1,
                 .y = -1
             };
+
             while (j < MAP_WIDTH) {
                 if(mapBuf[i][j] != '@' && on_surface) {
                     on_surface = 0;

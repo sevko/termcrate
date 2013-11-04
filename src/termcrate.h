@@ -23,6 +23,7 @@
 #define BULL_XVEL 8
 #define BULLET_RADIUS 1
 
+#define ENEMY_SPAWN_TICKS 300
 
 /*
  * Structs
@@ -66,6 +67,7 @@ void tick();
 
 int abs(int val);
 int collision(Geometry_t g1, Geometry_t g2);
+void addActor(Actor_t * actors, Actor_t newActor, int numAct);
 
 void updateEnemies();
 void updateBullets();
