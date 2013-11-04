@@ -10,7 +10,6 @@
 
 Actor_t * _enemies;
 Actor_t * _bullets;
-
 Crate_t _crate;
 Player_t _player;
 
@@ -31,6 +30,18 @@ void game(){
 void config(){
     _gameLost = 0;
 	scanMap();
+
+	Geometry_t geo = {
+		.x = 10, 
+		.y = 42, 
+		.rad = 1
+	};
+
+	Player_t player = {
+		.geo = geo
+	};
+	
+	_player = player;
 }
 
 void tick(){
