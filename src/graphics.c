@@ -12,11 +12,11 @@ extern Actor_t * _enemies;
 extern Actor_t * _bullets;
 extern Crate_t _crate;
 extern Player_t _player;
-Surface_t * _surfaces;
+extern Surface_t * _surfaces;
 
 extern int _numEnemies;
 extern int _numBullets;
-int _numSurfaces;
+extern int _numSurfaces;
 
 void render(){
 	clearScreen();
@@ -117,6 +117,6 @@ void scanMap(){
 }
 
 void addSurface(Surface_t * surfaces, Surface_t newSurface, int numSurface) {
-    surfaces = realloc(surfaces, (numSurface + 1) * sizeof(Surface_t));
+    surfaces = (Surface_t *)realloc(surfaces, (numSurface + 1) * sizeof(Surface_t));
     surfaces[numSurface] = newSurface;
 }
