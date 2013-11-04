@@ -10,11 +10,13 @@
 
 Actor_t * _enemies;
 Actor_t * _bullets;
+Surface_t * _surfaces;
 Crate_t _crate;
 Player_t _player;
 
 int _numEnemies;
 int _numBullets;
+int _numSurfaces;
 
 int _gameLost;
 
@@ -195,7 +197,7 @@ void fire(){
 }
 
 void enemyMove(Actor_t enem) {
-    if(surfaceLeft(enem.geo) || surfaceRight(enem.geo)) {
+    if(_player.geo.x > 0 || _player.geo.x < 176) {
         enem.dirMotion *= -1;
     } else if(!surfaceBottom(enem.geo)) {
         enem.geo.y -= ENEM_YVEL;
@@ -204,7 +206,7 @@ void enemyMove(Actor_t enem) {
 }
 
 void bulletMove(Actor_t bull) {
-    if(surfaceLeft(bull.geo) || surfaceRight(bull.geo)) {
+    if(_player.geo.x > 0 || _player.geo.x < 176) {
         bull.alive = 0;
     }
     bull.geo.x += BULL_XVEL * bull.dirMotion;
