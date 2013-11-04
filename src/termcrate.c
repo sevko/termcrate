@@ -35,11 +35,12 @@ void game(){
 
 void config(){
     _gameLost = 0;
+	_tickCount = 0;
 	scanMap();
 
 	Geometry_t geo = {
 		.x = 10, 
-		.y = 42, 
+		.y = 2, 
 		.rad = 1
 	};
 
@@ -159,9 +160,9 @@ void updatePlayer(){
 
         else if(key == QUIT)
             _gameLost = 1;
-
-        gravity();
     }
+	if(_tickCount % GRAVITY_DELAY_TICKS == 0)
+		gravity();
 }
 
 int onSurface(Surface_t surface, Geometry_t geo) {

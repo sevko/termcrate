@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../src/termcrate.h"
 #include "../src/graphics.h"
@@ -26,7 +27,7 @@ void render(){
 
 void renderMap(){
 	int row;
-	for(row = 0; row < MAP_HEIGHT; row++)
+	for(row = 0; row < MAP_HEIGHT + 1; row++)
 		printf("%s", mapBuf[row]);
 }
 
@@ -61,7 +62,7 @@ void drawBullet(){
 }
 
 void drawCrate(){
-	printf("^");
+	printf("I");
 }
 
 void drawPlayer(){

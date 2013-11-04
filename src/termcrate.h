@@ -2,7 +2,6 @@
  * Macros
 */
 
-
 #define MOVE_UP KEY_UP
 #define MOVE_LEFT KEY_LEFT
 #define MOVE_RIGHT KEY_RIGHT
@@ -16,7 +15,7 @@
 #define G 1
 
 #define PLAYER_XVEL 3
-#define JUMP_HEIGHT 2
+#define JUMP_HEIGHT 6
 #define ENEM_XVEL 2
 #define ENEM_YVEL 2
 
@@ -24,6 +23,7 @@
 #define BULLET_RADIUS 1
 
 #define ENEMY_SPAWN_TICKS 300
+#define GRAVITY_DELAY_TICKS 6 
 
 /*
  * Structs
