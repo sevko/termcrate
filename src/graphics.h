@@ -7,6 +7,7 @@ void render();
 void renderMap();
 void renderActors();
 
+void addActor(int enem, Actor_t newActor);
 void drawEnemy();
 void drawBullet();
 void drawCrate();
