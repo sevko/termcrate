@@ -8,20 +8,18 @@
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
 
+char mapBuf[MAP_HEIGHT][MAP_WIDTH];
+
 Actor_t * _enemies;
 Actor_t * _bullets;
-Surface_t * _surfaces;
 Crate_t _crate;
 Player_t _player;
-Surface_t * _surfaces;
 
 int _numEnemies;
 int _numBullets;
-int _numSurfaces;
 
 int _gameLost;
 
-int _numSurfaces;
 int _tickCount;
 
 void game(){
@@ -165,21 +163,12 @@ void updatePlayer(){
 		gravity();
 }
 
-int onSurface(Surface_t surface, Geometry_t geo) {
-    return surface.p1.y == geo.y && (geo.x > surface.p1.x && geo.x < surface.p2.x) && geo.y < 44;
-}
-
-int onSurfaces(Geometry_t geo) {
-    int surf;
-    for(surf = 0; surf < _numSurfaces; surf++) {
-        if(onSurface(_surfaces[surf], geo))
-            return 1;
-    }
-    return 0;
+int onSurface(Geometry_t geo) {
+    return geo.y >= MAP_HEIGHT || mapBuf[geo.y + 1][geo.x] == '@';
 }
 
 void moveUp() {
-    if(_player.geo.y > 0) {
+    if(onSurface(_player.geo) && _player.geo.y > 0) {
         _player.geo.y -= JUMP_HEIGHT;
     }
 }
@@ -191,13 +180,13 @@ void moveLeft() {
 }
 
 void moveRight() {
-    if(_player.geo.x < 176) {
+    if(_player.geo.x < MAP_WIDTH) {
         _player.geo.x += PLAYER_XVEL;
     }
 }
 
 void gravity() {
-    if(!onSurfaces(_player.geo)) {
+    if(!onSurface(_player.geo)) {
         _player.geo.y += G;
     }
 }
@@ -219,16 +208,16 @@ void fire(){
 }
 
 void enemyMove(Actor_t enem) {
-    if(_player.geo.x > 0 || _player.geo.x < 176) {
+    if(_player.geo.x > 0 || _player.geo.x < MAP_WIDTH) {
         enem.dirMotion *= -1;
-    } else if(!onSurfaces(enem.geo)) {
-        enem.geo.y -= ENEM_YVEL;
+    } else if(!onSurface(enem.geo)) {
+        enem.geo.y += ENEM_YVEL;
     }
     enem.geo.x += ENEM_XVEL * enem.dirMotion;
 }
 
 void bulletMove(Actor_t bull) {
-    if(_player.geo.x > 0 || _player.geo.x < 176) {
+    if(_player.geo.x > 0 || _player.geo.x < MAP_WIDTH) {
         bull.alive = 0;
     }
     bull.geo.x += BULL_XVEL * bull.dirMotion;

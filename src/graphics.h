@@ -15,4 +15,3 @@ void drawPlayer();
 void clearScreen();
 void resetCursor();
 void scanMap();
-void addSurface();
