@@ -13,12 +13,16 @@ Actor_t * _bullets;
 Surface_t * _surfaces;
 Crate_t _crate;
 Player_t _player;
+Surface_t * _surfaces;
 
 int _numEnemies;
 int _numBullets;
 int _numSurfaces;
 
 int _gameLost;
+
+int _numSurfaces;
+int _tickCount;
 
 void game(){
     config();
@@ -50,6 +54,8 @@ void tick(){
     updatePlayer();
     updateBullets();
     updateEnemies();
+
+	_tickCount++;
 }
 
 //returns absolute value of val
@@ -67,6 +73,11 @@ int collision(Geometry_t g1, Geometry_t g2){
     return abs(g1.y - g2.y + 1) < sumRad && abs(g1.x - g2.x + 1) < sumRad;
 }
 
+void addActor(Actor_t * actors, Actor_t newActor, int numAct){
+	actors = realloc(actors, (numAct + 1) * sizeof(Actor_t));
+	actors[numAct] = newActor;
+}
+
 void updateEnemies(){
     int enem;
     for(enem = 0; enem < _numEnemies; enem++){
@@ -77,6 +88,22 @@ void updateEnemies(){
         }
         enemyMove(mob);
     }
+
+	if(_tickCount % ENEMY_SPAWN_TICKS == 0){
+		Geometry_t geo = {
+			.x = 88,
+			.y = 1,
+			.rad = 1
+		};
+
+		Actor_t enemy = {
+			.geo = geo,
+			.dirMotion = RIGHT,
+			.alive = 1
+		};
+
+		addActor(_enemies, enemy, _numEnemies);
+	}
 }
 
 void updateBullets(){
@@ -114,11 +141,6 @@ void updateDeathFlags(Actor_t ** oldActors, int numAct, int numDead){
 	oldActors = newActors;
 }
 
-void addActor(Actor_t * actors, Actor_t newActor, int numAct){
-	actors = realloc(actors, (numAct + 1) * sizeof(Actor_t));
-	actors[numAct] = newActor;
-}
-
 void updatePlayer(){
 	int key;
     if((key = getkey()) != KEY_NOTHING){
@@ -143,8 +165,7 @@ void updatePlayer(){
 }
 
 int onSurface(Surface_t surface, Geometry_t geo) {
-    return surface.p1.y == geo.y && (geo.x > surface.p1.x && geo.x < surface.p2.x)
-        && geo.y < 44;
+    return surface.p1.y == geo.y && (geo.x > surface.p1.x && geo.x < surface.p2.x) && geo.y < 44;
 }
 
 int onSurfaces(Geometry_t geo) {
@@ -199,7 +220,7 @@ void fire(){
 void enemyMove(Actor_t enem) {
     if(_player.geo.x > 0 || _player.geo.x < 176) {
         enem.dirMotion *= -1;
-    } else if(!surfaceBottom(enem.geo)) {
+    } else if(!onSurfaces(enem.geo)) {
         enem.geo.y -= ENEM_YVEL;
     }
     enem.geo.x += ENEM_XVEL * enem.dirMotion;
