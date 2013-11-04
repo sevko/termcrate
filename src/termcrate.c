@@ -129,54 +129,41 @@ void updatePlayer(){
     }
 }
 
-//Check if geo is on a surface or correct if near enough
-int surfaceBottom(Geometry_t geo) {
-
+int onSurface(Surface_t surface, Geometry_t geo) {
+    return surface.p1.y == geo.y && (geo.x > surface.p1.x && geo.x < surface.p2.x)
+        && geo.y < 44;
 }
 
-//Check if geo is touching a sruface from the bottom or correct if near enough
-int surfaceTop(Geometry_t geo) {
-
-}
-
-//Check if the geo is touching a surface on its left or correct if near enough
-int surfaceLeft(Geometry_t geo) {
-	if(geo.x - geo.rad < 1)
-		return 1;
-	return 0;
-}
-
-//Check if the geo is touching a surface on its right or correct if near enough
-int surfaceRight(Geometry_t geo) {
-	if(geo.x >= 176)
-		return 1;
-	return 0;
+int onSurfaces(Geometry_t geo) {
+    int surf;
+    for(surf = 0; surf < _numSurfaces; surf++) {
+        if(onSurface(_surfaces[surf], geo))
+            return 1;
+    }
+    return 0;
 }
 
 void moveUp() {
-    if(surfaceBottom(_player.geo)) {
-        _player.yVel += PLAYER_YVEL;
+    if(_player.geo.y > 0) {
+        _player.geo.y += JUMP_HEIGHT;
     }
 }
 
 void moveLeft() {
-    if(!surfaceLeft(_player.geo)) {
+    if(_player.geo.x > 0) {
         _player.geo.x -= PLAYER_XVEL;
     }
 }
 
 void moveRight() {
-    if(!surfaceRight(_player.geo)) {
+    if(_player.geo.x < 176) {
         _player.geo.x += PLAYER_XVEL;
     }
 }
 
 void gravity() {
-    if(!surfaceBottom(_player.geo)) {
-        _player.geo.y += _player.yVel;
-		_player.yVel -= G;
-	} else {
-        _player.yVel = 0;
+    if(!onSurfaces(_player.geo)) {
+        _player.geo.y -= G;
     }
 }
 

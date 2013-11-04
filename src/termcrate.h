@@ -16,7 +16,7 @@
 #define G 1
 
 #define PLAYER_XVEL 3
-#define PLAYER_YVEL 2
+#define JUMP_HEIGHT 2
 #define ENEM_XVEL 2
 #define ENEM_YVEL 2
 
@@ -47,9 +47,12 @@ typedef struct {
 
 typedef struct {
 	Geometry_t geo;
-    int yVel;
 } Player_t;
 
+typedef struct {
+	Geometry_t p1;
+	Geometry_t p2;
+} Surface_t;
 
 /*
  * Functions
