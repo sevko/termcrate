@@ -2,7 +2,7 @@ CC = gcc
 xterm = xterm -geom 176x44 -name termcrate
 
 run: clean termcrate
-	$(xterm) ./termcrate
+	./termcrate
 
 clean: 
 	rm -rf build
