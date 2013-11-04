@@ -179,7 +179,7 @@ int onSurfaces(Geometry_t geo) {
 
 void moveUp() {
     if(_player.geo.y > 0) {
-        _player.geo.y += JUMP_HEIGHT;
+        _player.geo.y -= JUMP_HEIGHT;
     }
 }
 
@@ -197,7 +197,7 @@ void moveRight() {
 
 void gravity() {
     if(!onSurfaces(_player.geo)) {
-        _player.geo.y -= G;
+        _player.geo.y += G;
     }
 }
 

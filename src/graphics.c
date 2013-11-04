@@ -87,17 +87,17 @@ void scanMap(){
         while(i < MAP_HEIGHT) {
             int j = 0;
             int on_surface = 0;
-
+             
             Geometry_t point1 = {
                 .x = -1,
                 .y = -1
             };
-
+             
             Geometry_t point2 = {
                 .x = -1,
                 .y = -1
             };
-
+             
             while (j < MAP_WIDTH) {
                 if(mapBuf[i][j] != '@' && on_surface) {
                     on_surface = 0;
@@ -107,7 +107,7 @@ void scanMap(){
                         .p1 = point1,
                         .p2 = point2
                     };
-                    addSurface(_surfaces, newSurface, _numSurfaces++);
+                    //addSurface(_surfaces, newSurface, _numSurfaces++);
                 } else if(mapBuf[i][j] == '@' && !on_surface) {
                     on_surface = 1;
                     point1.x = j;
@@ -120,6 +120,6 @@ void scanMap(){
 }
 
 void addSurface(Surface_t * surfaces, Surface_t newSurface, int numSurface) {
-    surfaces = (Surface_t *)realloc(surfaces, (numSurface + 1) * sizeof(Surface_t));
+    surfaces = realloc(surfaces, (numSurface + 1) * sizeof(Surface_t));
     surfaces[numSurface] = newSurface;
 }
