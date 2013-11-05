@@ -146,7 +146,7 @@ void updatePlayer(){
 }
 
 int onSurface(Geometry_t geo) {
-    return geo.y >= MAP_HEIGHT || mapBuf[geo.y + 1][geo.x] == '@';
+    return geo.y >= MAP_HEIGHT || mapBuf[geo.y][geo.x] == '@';
 }
 
 void moveUp() {
