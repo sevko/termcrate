@@ -15,9 +15,9 @@
 #define G 1
 
 #define PLAYER_XVEL 3
-#define JUMP_HEIGHT 18
+#define JUMP_HEIGHT 14
 
-#define ENEM_XVEL 2
+#define ENEM_XVEL 1
 #define ENEM_YVEL 2
 #define ENEMY_RADIUS 1
 #define MAX_ENEMIES 50
@@ -27,7 +27,7 @@
 #define MAX_BULLETS 50
 
 #define ENEMY_SPAWN_TICKS 300
-#define GRAVITY_DELAY_TICKS 6 
+#define GRAVITY_DELAY_TICKS 4 
 
 /*
  * Structs

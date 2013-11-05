@@ -89,5 +89,6 @@ void scanMap(){
     FILE * map = fopen(MAP_NAME, "r");
 
     int row = 0;
-    while(fgets(mapBuf[row++], MAP_WIDTH, map));
+    while(row < MAP_HEIGHT)
+		fgets(mapBuf[row++], MAP_WIDTH, map);
 }        

@@ -1,8 +1,8 @@
 CC = gcc
-xterm = xterm -geom 176x44 -name termcrate
+xterm = #xterm -geom 176x44 -name termcrate
 
-run: clean termcrate
-	./termcrate
+run: termcrate
+	$(xterm) ./termcrate
 
 clean: 
 	rm -rf build
