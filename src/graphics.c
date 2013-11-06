@@ -9,8 +9,8 @@
 
 extern char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
 
-extern Actor_t _enemies[MAX_ENEMIES];
-extern Actor_t _bullets[MAX_BULLETS];
+extern Actor_t _enemies[MAX_ENEMIES + 1];
+extern Actor_t _bullets[MAX_BULLETS + 1];
 extern Crate_t _crate;
 extern Player_t _player;
 

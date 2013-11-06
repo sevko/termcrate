@@ -14,7 +14,7 @@
 #define RIGHT 1
 #define G 1
 
-#define PLAYER_XVEL 2
+#define PLAYER_XVEL 3
 #define JUMP_HEIGHT 20
 
 #define ENEM_XVEL 1

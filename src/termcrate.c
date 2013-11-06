@@ -10,8 +10,8 @@
 
 char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
 
-Actor_t _enemies[MAX_ENEMIES];
-Actor_t _bullets[MAX_BULLETS];
+Actor_t _enemies[MAX_ENEMIES + 1];
+Actor_t _bullets[MAX_BULLETS + 1];
 Crate_t _crate;
 Player_t _player;
 
@@ -83,10 +83,16 @@ void updateEnemies(){
             _gameLost = 1;
             break;
         }
+
         enemyMove(mob);
     }
 
-    if(_tickCount % ENEMY_SPAWN_TICKS == 0){
+    spawnEnemy();
+    expireEnemies();
+}
+
+void spawnEnemy(){
+    if(_tickCount % ENEMY_SPAWN_TICKS == 0 && _numEnemies < MAX_ENEMIES){
         Geometry_t geo = {
             .x = 88,
             .y = 1,
@@ -103,23 +109,66 @@ void updateEnemies(){
     }
 }
 
+void expireEnemies() {
+    int enem;
+    for(enem = 0; enem < _numEnemies; enem++){
+        Actor_t * mob = &_enemies[enem];
+        if((*mob).alive == 0) {
+            int i;
+            for(i = enem; i <= _numEnemies; i++)
+                _enemies[i] = _enemies[i + 1];
+
+            _numEnemies--;
+        }
+    }
+}
+
 void updateBullets(){
     int bull, enem;
-    int deadBull = 0, deadEnem = 0;
 
     for(bull = 0; bull < _numBullets; bull++){
-        for(enem = 0; enem < _numEnemies; enem++)
-            if(collision(_bullets[bull].geo, _enemies[enem].geo) && _enemies[enem].alive){
-                _bullets[bull].alive = _enemies[enem].alive = 0;
-                deadBull++;
-                deadEnem++;
+        Actor_t * ammo = &_bullets[bull];
+        for(enem = 0; enem < _numEnemies; enem++) {
+            Actor_t * mob = &_enemies[enem];
+            if(collision((*ammo).geo, (*mob).geo)){
+                (*ammo).alive = (*mob).alive = 0;
             }
-        bulletMove(&_bullets[bull]);
+        }
+
+        bulletMove(ammo);
     }
+}
 
-    _numBullets -= deadBull;
+void expireBullets() {
+    int bull;
+    for(bull = 0; bull < _numBullets; bull++){
+        Actor_t * ammo = &_bullets[bull];
+        if((*ammo).alive == 0) {
+            int i;
+            for(i = bull; i <= _numBullets; i++)
+                _bullets[i] = _bullets[i + 1];
 
-    _numEnemies -= deadEnem;
+            _numBullets--;
+        }
+    }
+}
+
+void spawnBullet(){
+    if(_numBullets < MAX_BULLETS) {
+        Geometry_t bullGeo = { 
+            .x = _player.geo.x, 
+            .y = _player.geo.y, 
+            .rad = BULLET_RADIUS
+        };
+
+        Actor_t bull = { 
+            .geo = bullGeo,
+            .dirMotion = RIGHT, //placeholder
+            .alive = 1
+        };
+
+        addActor(0, bull);
+    }
 }
 
 void updatePlayer(){
@@ -136,13 +185,14 @@ void updatePlayer(){
             moveRight();
 
         else if(key == FIRE)
-            fire();
+            spawnBullet();
 
         else if(key == QUIT)
             _gameLost = 1;
     }
+
     if(_tickCount % GRAVITY_DELAY_TICKS == 0)
-        gravity();
+        moveDown();
 }
 
 int onSurface(Geometry_t geo) {
@@ -167,34 +217,24 @@ void moveRight() {
     }
 }
 
-void gravity() {
+void moveDown() {
     if(!onSurface(_player.geo)) {
         _player.geo.y += G;
     }
 }
 
-void fire(){
-    Geometry_t bullGeo = { 
-        .x = _player.geo.x, 
-        .y = _player.geo.y, 
-        .rad = BULLET_RADIUS
-    };
-
-    Actor_t bull = { 
-        .geo = bullGeo,
-        .dirMotion = RIGHT, //placeholder
-        .alive = 1
-    };
-
-    addActor(0, bull);
-}
-
 void enemyMove(Actor_t * enem) {
+    if((*enem).geo.y >= MAP_HEIGHT) {
+        (*enem).geo.y = 0;
+        (*enem).dirMotion *= -1;
+    }
+
     if((*enem).geo.x >= MAP_WIDTH - 1 || (*enem).geo.x < 1) {
         (*enem).dirMotion *= -1;
     } else if(!onSurface((*enem).geo)) {
         (*enem).geo.y += G;
     }
+
     (*enem).geo.x += ENEM_XVEL * (*enem).dirMotion;
 }
 
@@ -202,6 +242,7 @@ void bulletMove(Actor_t * bull) {
     if((*bull).geo.x > MAP_WIDTH || (*bull).geo.y < 0) {
         (*bull).alive = 0;
     }
+
     (*bull).geo.x += BULL_XVEL * (*bull).dirMotion;
 }
 
