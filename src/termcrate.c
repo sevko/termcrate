@@ -8,7 +8,7 @@
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
 
-char mapBuf[MAP_HEIGHT][MAP_WIDTH];
+char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
 
 Actor_t _enemies[MAX_ENEMIES];
 Actor_t _bullets[MAX_BULLETS];
@@ -190,7 +190,7 @@ void fire(){
 }
 
 void enemyMove(Actor_t * enem) {
-    if((*enem).geo.x > MAP_WIDTH || (*enem).geo.x < 0) {
+    if((*enem).geo.x >= MAP_WIDTH - 1 || (*enem).geo.x < 1) {
         (*enem).dirMotion *= -1;
     } else if(!onSurface((*enem).geo)) {
         (*enem).geo.y += G;

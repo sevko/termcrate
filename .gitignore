@@ -1,2 +1,5 @@
 build
 termcrate
+
+#slightly different per developer
+makefile

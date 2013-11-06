@@ -14,11 +14,11 @@
 #define RIGHT 1
 #define G 1
 
-#define PLAYER_XVEL 3
-#define JUMP_HEIGHT 14
+#define PLAYER_XVEL 2
+#define JUMP_HEIGHT 20
 
 #define ENEM_XVEL 1
-#define ENEM_YVEL 2
+#define ENEM_YVEL 1
 #define ENEMY_RADIUS 1
 #define MAX_ENEMIES 50
 

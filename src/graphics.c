@@ -7,7 +7,7 @@
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
 
-extern char mapBuf[MAP_HEIGHT][MAP_WIDTH];
+extern char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
 
 extern Actor_t _enemies[MAX_ENEMIES];
 extern Actor_t _bullets[MAX_BULLETS];
@@ -25,8 +25,10 @@ void render(){
 
 void renderMap(){
 	int row;
+	xt_par0(XT_CH_YELLOW);
 	for(row = 0; row < MAP_HEIGHT; row++)
 		printf("%s", mapBuf[row]);
+	xt_par0(XT_CH_NORMAL);
 }
 
 void renderActors(){
@@ -61,7 +63,9 @@ void addActor(int enem, Actor_t newActor){
 }
 
 void drawEnemy(){
+	xt_par0(XT_CH_GREEN);
 	printf("X");
+	xt_par0(XT_CH_NORMAL);
 }
 
 void drawBullet(){
@@ -73,7 +77,9 @@ void drawCrate(){
 }
 
 void drawPlayer(){
+	xt_par0(XT_CH_MAGENTA);
 	printf("O");
+	xt_par0(XT_CH_NORMAL);
 }
 
 void clearScreen(){
@@ -90,5 +96,5 @@ void scanMap(){
 
 	int row;
 	for(row = 0; row < MAP_HEIGHT; row++)
-		fgets(mapBuf[row], MAP_WIDTH, map);
+		fgets(mapBuf[row], MAP_BUF_WIDTH, map);
 }
