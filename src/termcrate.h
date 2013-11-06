@@ -5,7 +5,7 @@
 #define MOVE_UP KEY_UP
 #define MOVE_LEFT KEY_LEFT
 #define MOVE_RIGHT KEY_RIGHT
-#define FIRE KEY_ENTER
+#define FIRE 'x'
 #define QUIT KEY_F1
 
 #define PAUSE (1000000 / 60)
@@ -68,7 +68,13 @@ int abs(int val);
 int collision(Geometry_t g1, Geometry_t g2);
 
 void updateEnemies();
+void spawnEnemy();
+void expireEnemies();
+
 void updateBullets();
+void spawnBullet();
+void expireBullets();
+
 void updatePlayer();
 
 int surfaceBottom(Geometry_t geo);
@@ -79,8 +85,7 @@ int surfaceRight(Geometry_t geo);
 void moveUp();
 void moveLeft();
 void moveRight();
-void gravity();
-void fire();
+void moveDown();
 
 void enemyMove(Actor_t * enem);
 void bulletMove(Actor_t * bull);
