@@ -57,7 +57,7 @@ void addActor(int enem, Actor_t newActor){
 	if(enem && _numEnemies < MAX_ENEMIES) {
 		_enemies[_numEnemies++] = newActor;
 	}
-	else if(_numBullets < _numBullets) {
+	else if(_numBullets < MAX_BULLETS) {
 		_bullets[_numBullets++] = newActor;
 	}
 }

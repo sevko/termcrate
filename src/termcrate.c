@@ -137,6 +137,8 @@ void updateBullets(){
 
         bulletMove(ammo);
     }
+
+    expireBullets();
 }
 
 void expireBullets() {
@@ -239,7 +241,7 @@ void enemyMove(Actor_t * enem) {
 }
 
 void bulletMove(Actor_t * bull) {
-    if((*bull).geo.x > MAP_WIDTH || (*bull).geo.y < 0) {
+    if((*bull).geo.x >= MAP_WIDTH || (*bull).geo.y <= 0) {
         (*bull).alive = 0;
     }
 
