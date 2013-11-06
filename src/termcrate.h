@@ -14,20 +14,19 @@
 #define RIGHT 1
 #define G 1
 
-#define PLAYER_XVEL 3
+#define PLAYER_DELAY 1
 #define JUMP_HEIGHT 20
 
-#define ENEM_XVEL 1
-#define ENEM_YVEL 1
+#define ENEM_DELAY 3
 #define ENEMY_RADIUS 1
 #define MAX_ENEMIES 50
 
-#define BULL_XVEL 8
+#define BULL_DELAY 1
 #define BULLET_RADIUS 1
 #define MAX_BULLETS 50
 
 #define ENEMY_SPAWN_TICKS 300
-#define GRAVITY_DELAY_TICKS 4 
+#define GRAVITY_DELAY_TICKS 4
 
 /*
  * Structs
@@ -52,7 +51,15 @@ typedef struct {
 
 typedef struct {
     Geometry_t geo;
+    int dirMotion;
 } Player_t;
+
+typedef struct {
+    int up;
+    int left;
+    int right;
+    int fire;
+} Keys_t;
 
 /*
  * Functions
@@ -75,6 +82,8 @@ void updateBullets();
 void spawnBullet();
 void expireBullets();
 
+void clearKeys();
+void updateKeys();
 void updatePlayer();
 
 int surfaceBottom(Geometry_t geo);

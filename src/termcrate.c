@@ -14,13 +14,14 @@ Actor_t _enemies[MAX_ENEMIES + 1];
 Actor_t _bullets[MAX_BULLETS + 1];
 Crate_t _crate;
 Player_t _player;
+Keys_t _keys;
 
 int _numEnemies;
 int _numBullets;
 
 int _gameLost;
-
 int _tickCount;
+
 
 void game(){
     config();
@@ -43,19 +44,24 @@ void config(){
         .y = 2, 
         .rad = 1
     };
-
     Player_t player = {
         .geo = geo
     };
-
     _player = player;
+
+    Keys_t keys = {
+        .up = 0,
+        .left = 0,
+        .right = 0,
+        .fire = 0
+    };
+    _keys = keys;
 }
 
 void tick(){
-    updatePlayer();
     updateBullets();
     updateEnemies();
-
+    updatePlayer();
     _tickCount++;
 }
 
@@ -165,7 +171,7 @@ void spawnBullet(){
 
         Actor_t bull = { 
             .geo = bullGeo,
-            .dirMotion = RIGHT, //placeholder
+            .dirMotion = RIGHT,
             .alive = 1
         };
 
@@ -173,26 +179,55 @@ void spawnBullet(){
     }
 }
 
-void updatePlayer(){
+void clearKeys() {
+    Keys_t keys = {
+        .up = 0,
+        .left = 0,
+        .right = 0,
+        .fire = 0
+    };
+    _keys = keys;
+}
+
+void updateKeys() {
     int key;
-    if((key = getkey()) != KEY_NOTHING){
-
+    while ((key = getkey()) != KEY_NOTHING) {
         if(key == MOVE_UP)
-            moveUp();
+            _keys.up = 1;
 
-        else if(key == MOVE_LEFT)
-            moveLeft();
+        if(key == MOVE_LEFT)
+            _keys.left = 1;
 
-        else if(key == MOVE_RIGHT)
-            moveRight();
+        if(key == MOVE_RIGHT)
+            _keys.right = 1;
 
-        else if(key == FIRE)
-            spawnBullet();
+        if(key == FIRE)
+            _keys.fire = 1;
 
-        else if(key == QUIT)
+        if(key == QUIT)
             _gameLost = 1;
     }
+}
 
+void updatePlayer(){
+    updateKeys();
+
+    if(_tickCount % PLAYER_DELAY == 0) {
+        if(_keys.up)
+            moveUp();
+
+        if(_keys.left)
+            moveLeft();
+
+        if(_keys.right)
+            moveRight();
+
+        if(_keys.fire)
+            spawnBullet();
+
+        clearKeys();
+    }
+    
     if(_tickCount % GRAVITY_DELAY_TICKS == 0)
         moveDown();
 }
@@ -209,13 +244,13 @@ void moveUp() {
 
 void moveLeft() {
     if(_player.geo.x > 0) {
-        _player.geo.x -= PLAYER_XVEL;
+        _player.geo.x -= 1;
     }
 }
 
 void moveRight() {
     if(_player.geo.x < MAP_WIDTH) {
-        _player.geo.x += PLAYER_XVEL;
+        _player.geo.x += 1;
     }
 }
 
@@ -226,26 +261,33 @@ void moveDown() {
 }
 
 void enemyMove(Actor_t * enem) {
-    if((*enem).geo.y >= MAP_HEIGHT) {
-        (*enem).geo.y = 0;
-        (*enem).dirMotion *= -1;
+    if(_tickCount % ENEM_DELAY == 0) {
+        if(enem->geo.y >= MAP_HEIGHT) {
+            enem->geo.y = 0;
+            enem->dirMotion *= -1;
+        }
+        
+        if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x < 1) {
+            enem->dirMotion *= -1;
+        } 
+
+        enem->geo.x += enem->dirMotion;
+
+        if(!onSurface(enem->geo)) {
+            enem->geo.y += G;
+        }
     }
 
-    if((*enem).geo.x >= MAP_WIDTH - 1 || (*enem).geo.x < 1) {
-        (*enem).dirMotion *= -1;
-    } else if(!onSurface((*enem).geo)) {
-        (*enem).geo.y += G;
-    }
-
-    (*enem).geo.x += ENEM_XVEL * (*enem).dirMotion;
 }
 
 void bulletMove(Actor_t * bull) {
-    if((*bull).geo.x >= MAP_WIDTH || (*bull).geo.y <= 0) {
-        (*bull).alive = 0;
+    if(bull->geo.x >= MAP_WIDTH || bull->geo.y <= 0) {
+        bull->alive = 0;
     }
 
-    (*bull).geo.x += BULL_XVEL * (*bull).dirMotion;
+    if(_tickCount % BULL_DELAY == 0) {
+        bull->geo.x += bull->dirMotion;
+    }
 }
 
 void main(){
