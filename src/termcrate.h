@@ -57,6 +57,13 @@ typedef struct {
 } Player_t;
 
 typedef struct {
+	Actor_t enemy;
+	Actor_t bullet;
+	Crate_t crate;
+	Player_t player;
+} Elements_t;
+
+typedef struct {
     int up;
     int left;
     int right;
@@ -70,6 +77,7 @@ typedef struct {
 
 void game();
 void config();
+void loadElements();
 
 void tick();
 
