@@ -13,3 +13,10 @@
 
 ###Usage
 `make run`
+
+###Controls
+- wasd movement
+- j to shoot
+
+###Instructions
+- avoid the enemies, and shoot them if possible
