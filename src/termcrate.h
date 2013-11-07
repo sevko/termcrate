@@ -15,7 +15,7 @@
 #define G 1
 
 #define PLAYER_DELAY 1
-#define JUMP_HEIGHT 20
+#define JUMP_HEIGHT 18
 
 #define ENEM_DELAY 3
 #define ENEMY_RADIUS 1
@@ -23,7 +23,7 @@
 
 #define BULL_DELAY 1
 #define BULLET_RADIUS 1
-#define FIRE_RATE 3
+#define FIRE_RATE 15
 #define MAX_BULLETS 50
 
 #define ENEMY_SPAWN_TICKS 300
@@ -39,6 +39,11 @@ typedef struct {
         y, 
         rad; 	//radius
 } Geometry_t;
+
+typedef struct {
+    Geometry_t p1,
+               p2;
+} Surface_t;
 
 typedef struct {
     Geometry_t geo;

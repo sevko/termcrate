@@ -22,4 +22,5 @@ void drawSprite(char * sprite, char * color);
 
 void clearScreen();
 void resetCursor();
+void loadSurfaces();
 void loadMap();
