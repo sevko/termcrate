@@ -38,7 +38,7 @@ void config(){
 	_gameLost = 0;
 	_tickCount = 0;
 
-	scanMap();
+	loadMap();
 	loadElements();
 	_player = _elements.player;
 
