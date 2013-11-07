@@ -102,7 +102,7 @@ void updateEnemies(){
 	int enem;
 	for(enem = 0; enem < _numEnemies; enem++){
 		Actor_t * mob = &_enemies[enem];
-		if(collision((*mob).geo, _player.geo)){
+		if(collision(mob->geo, _player.geo)){
 			_gameLost = 1;
 			break;
 		}
@@ -142,8 +142,8 @@ void updateBullets(){
 		Actor_t * ammo = &_bullets[bull];
 		for(enem = 0; enem < _numEnemies; enem++) {
 			Actor_t * mob = &_enemies[enem];
-			if(collision((*ammo).geo, (*mob).geo)){
-				(*ammo).alive = (*mob).alive = 0;
+			if(collision(ammo->geo, mob->geo)){
+				ammo->alive = mob->alive = 0;
 			}
 		}
 
@@ -157,7 +157,7 @@ void expireBullets() {
 	int bull;
 	for(bull = 0; bull < _numBullets; bull++){
 		Actor_t * ammo = &_bullets[bull];
-		if((*ammo).alive == 0) {
+		if(ammo->alive == 0) {
 			int i;
 			for(i = bull; i <= _numBullets; i++)
 				_bullets[i] = _bullets[i + 1];
@@ -172,6 +172,7 @@ void spawnBullet(int dir){
 		Actor_t bull = _elements.bullet;
 		bull.geo.x = _player.geo.x;
 		bull.geo.y = _player.geo.y;
+                bull.dirMotion = dir;
 		addActor(0, bull);
 	}
 	_player.reload = 0;
@@ -268,7 +269,7 @@ void enemyMove(Actor_t * enem) {
 			enem->dirMotion *= -1;
 		}
 		
-		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x < 1) {
+		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x <= 2) {
 			enem->dirMotion *= -1;
 		} 
 
@@ -282,12 +283,12 @@ void enemyMove(Actor_t * enem) {
 }
 
 void bulletMove(Actor_t * bull) {
-	if(bull->geo.x >= MAP_WIDTH || bull->geo.y <= 0) {
-		bull->alive = 0;
-	}
-
 	if(_tickCount % BULL_DELAY == 0) {
-		bull->geo.x += bull->dirMotion;
+                if(bull->geo.x >= MAP_WIDTH - 1 || bull->geo.y <= 2) {
+                        bull->alive = 0;
+                }
+
+                bull->geo.x += bull->dirMotion;
 	}
 }
 
