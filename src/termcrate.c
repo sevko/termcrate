@@ -209,7 +209,6 @@ void updateKeys() {
             _keys.right = 1;
 
         if(key == FIRE){
-            audio(GUNSHOT);
             _keys.fire = 1;
         }
 
@@ -230,8 +229,10 @@ void updatePlayer(){
         if(_keys.right)
             moveRight();
 
-        if(_keys.fire && _player.reload >= FIRE_RATE)
+        if(_keys.fire && _player.reload >= FIRE_RATE){
             spawnBullet(_player.dirMotion);
+			audio(GUNSHOT);
+		}
 
         clearKeys();
         _player.reload += 1;
@@ -315,5 +316,5 @@ void bulletMove(Actor_t * bull) {
 }
 
 void main(){
-    game();
+	menu();
 }

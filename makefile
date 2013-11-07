@@ -1,5 +1,5 @@
 CC = gcc
-xterm = #xterm -geom 176x44 -name termcrate
+xterm = xterm -geom 176x44 -name termcrate
 
 run: termcrate
 	$(xterm) ./termcrate
@@ -8,14 +8,20 @@ clean:
 	rm -rf build
 	rm termcrate
 
-termcrate: build build/termcrate.o build/graphics.o build/xterm_control.o build/keyboard.o
-	$(CC) build/termcrate.o build/graphics.o build/xterm_control.o build/keyboard.o -o termcrate
+termcrate: build build/termcrate.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o
+	$(CC) build/termcrate.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o -o termcrate
 
 build/termcrate.o: src/termcrate.c
 	$(CC) -c src/termcrate.c -o build/termcrate.o
 
 build/graphics.o: src/graphics.c
 	$(CC) -c src/graphics.c -o build/graphics.o
+
+build/audio.o: src/audio.c
+	$(CC) -c src/audio.c -o build/audio.o
+
+build/menu.o: src/menu.c
+	$(CC) -c src/menu.c -o build/menu.o
 
 build/xterm_control.o: xterm/xterm_control.c
 	$(CC) -c xterm/xterm_control.c -o build/xterm_control.o 

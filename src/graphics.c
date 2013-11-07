@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../src/termcrate.h"
-#include "../src/graphics.h"
+#include "termcrate.h"
+#include "graphics.h"
+#include "menu.h"
 
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
 
 extern char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
 extern Surface_t _surfaces[10];
+extern Button_t _buttons[NUM_BUTTONS];
 
 extern Actor_t _enemies[MAX_ENEMIES + 1];
 extern Actor_t _bullets[MAX_BULLETS + 1];
@@ -18,12 +20,25 @@ extern Player_t _player;
 extern int _numEnemies;
 extern int _numBullets;
 extern int _numSurfaces;
+extern int _selectedButton;
 
 void render(){
 	clearScreen();
 	renderMap();
 	renderActors();
 	resetCursor();
+}
+
+void renderMenu(){
+	clearScreen();
+	int button;
+	for(button = 0; button < NUM_BUTTONS; button++){
+		Button_t but = _buttons[button];
+		if(button == _selectedButton)
+			xt_par0(COLOR_SELECTED_BUTTON);
+		printf(but.name);
+		xt_par0(XT_CH_NORMAL);
+	}
 }
 
 void renderMap(){
