@@ -1,5 +1,7 @@
-#define GUNSHOT "res/audio/gunshot.wav"
-#define THEME "res/audio/theme.wav"
-#define JUMP "res/audio/jump.wav"
+#define AUD_PATH "res/audio/"
+
+#define GUNSHOT AUD_PATH "gunshot.wav"
+#define THEME AUD_PATH "theme.wav"
+#define JUMP AUD_PATH "jump.wav"
 
 void audio(char * filePath);

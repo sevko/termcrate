@@ -33,7 +33,6 @@
  * Structs
  */
 
-
 typedef struct {
     int x, 
         y, 
@@ -73,7 +72,6 @@ typedef struct {
 /*
  * Functions
  */
-
 
 void game();
 void config();

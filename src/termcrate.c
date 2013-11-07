@@ -2,9 +2,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "./termcrate.h"
-#include "./graphics.h"
-#include "./audio.h"
+#include "termcrate.h"
+#include "graphics.h"
+#include "audio.h"
 
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
@@ -41,6 +41,7 @@ void config(){
 
 	loadMap();
 	loadElements();
+
 	_player = _elements.player;
 
 	Keys_t keys = {
@@ -54,6 +55,9 @@ void config(){
 	audio(THEME);
 }
 
+//populates _elements with an instance of each 
+//element struct with default variable initializations;
+//makes future creation of new structs cleaner.
 void loadElements(){
 	Geometry_t geo = {
 		.x = 1, 
@@ -94,12 +98,10 @@ int abs(int val){
 	return val;
 }
 
-//returns whether geo1 collided with geo2
 int collision(Geometry_t g1, Geometry_t g2){
 	int sumRad = g1.rad + g2.rad;
 	return abs(g1.y - g2.y + 1) < sumRad && abs(g1.x - g2.x + 1) < sumRad;
 }
-
 
 void updateEnemies(){
 	int enem;
@@ -235,7 +237,7 @@ void updatePlayer(){
 }
 
 int onSurface(Geometry_t geo) {
-	return geo.y >= MAP_HEIGHT || mapBuf[geo.y][geo.x - 1] == '@';
+	return mapBuf[geo.y][geo.x - 1] == '@';
 }
 
 void moveUp() {
