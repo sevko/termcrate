@@ -21,6 +21,7 @@ void render(){
 	clearScreen();
 	renderMap();
 	renderActors();
+	resetCursor();
 }
 
 void renderMap(){

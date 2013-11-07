@@ -199,8 +199,10 @@ void updateKeys() {
 		if(key == MOVE_RIGHT)
 			_keys.right = 1;
 
-		if(key == FIRE)
+		if(key == FIRE){
+			system("play res/laser.wav &"); //bad hack-around
 			_keys.fire = 1;
+		}
 
 		if(key == QUIT)
 			_gameLost = 1;
@@ -290,5 +292,6 @@ void bulletMove(Actor_t * bull) {
 }
 
 void main(){
+	system("play res/termcrateTheme.wav &"); //bad hack-around
 	game();
 }
