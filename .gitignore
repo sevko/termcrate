@@ -1,5 +1,3 @@
 build
 termcrate
-
-#slightly different per developer
-makefile
+res/audio

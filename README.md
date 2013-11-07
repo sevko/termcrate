@@ -15,8 +15,12 @@
 `make run`
 
 ###Controls
-- wasd movement
-- j to shoot
+    w - jump
+    a - move left 
+    d - move right
+    j - shoot
+    F1 - quit
+    
 
 ###Instructions
-- avoid the enemies, and shoot them if possible
+Avoid the enemies, and shoot them if possible.
