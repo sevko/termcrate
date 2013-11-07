@@ -4,6 +4,7 @@
 
 #include "./termcrate.h"
 #include "./graphics.h"
+#include "./audio.h"
 
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
@@ -49,6 +50,8 @@ void config(){
 		.fire = 0
 	};
 	_keys = keys;
+
+	audio(THEME);
 }
 
 void loadElements(){
@@ -200,7 +203,7 @@ void updateKeys() {
 			_keys.right = 1;
 
 		if(key == FIRE){
-			system("play res/laser.wav &"); //bad hack-around
+			audio(GUNSHOT);
 			_keys.fire = 1;
 		}
 
@@ -236,6 +239,7 @@ int onSurface(Geometry_t geo) {
 }
 
 void moveUp() {
+	audio(JUMP);
 	if(onSurface(_player.geo) && _player.geo.y > 0) {
 		_player.geo.y -= JUMP_HEIGHT;
 	}
@@ -268,7 +272,7 @@ void enemyMove(Actor_t * enem) {
 			enem->dirMotion *= -1;
 		}
 		
-		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x < 1) {
+		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x < 2) {
 			enem->dirMotion *= -1;
 		} 
 
@@ -292,6 +296,5 @@ void bulletMove(Actor_t * bull) {
 }
 
 void main(){
-	system("play res/termcrateTheme.wav &"); //bad hack-around
 	game();
 }
