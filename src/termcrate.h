@@ -53,6 +53,7 @@ typedef struct {
 typedef struct {
     Geometry_t geo;
     int dirMotion;
+    int reload;
 } Player_t;
 
 typedef struct {

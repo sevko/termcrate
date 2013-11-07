@@ -22,7 +22,6 @@ int _numBullets;
 int _gameLost;
 int _tickCount;
 
-
 void game(){
     config();
     while(!_gameLost){
@@ -46,7 +45,8 @@ void config(){
     };
     Player_t player = {
         .geo = geo,
-        .dirMotion = RIGHT
+        .dirMotion = RIGHT,
+        .reload = 0
     };
     _player = player;
 
@@ -177,6 +177,7 @@ void spawnBullet(int dir){
 
         addActor(0, bull);
     }
+    _player.reload = 0;
 }
 
 void clearKeys() {
@@ -221,12 +222,12 @@ void updatePlayer(){
         if(_keys.right)
             moveRight();
 
-        if(_keys.fire && _tickCount % FIRE_RATE == 0)
+        if(_keys.fire && _player.reload >= FIRE_RATE)
             spawnBullet(_player.dirMotion);
 
         clearKeys();
+        _player.reload += 1;
     }
-    
     if(_tickCount % GRAVITY_DELAY_TICKS == 0)
         moveDown();
 }
