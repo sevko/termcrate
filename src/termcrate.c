@@ -45,7 +45,8 @@ void config(){
         .rad = 1
     };
     Player_t player = {
-        .geo = geo
+        .geo = geo,
+        .dirMotion = RIGHT
     };
     _player = player;
 
@@ -131,7 +132,6 @@ void expireEnemies() {
 
 void updateBullets(){
     int bull, enem;
-
     for(bull = 0; bull < _numBullets; bull++){
         Actor_t * ammo = &_bullets[bull];
         for(enem = 0; enem < _numEnemies; enem++) {
@@ -161,7 +161,7 @@ void expireBullets() {
     }
 }
 
-void spawnBullet(){
+void spawnBullet(int dir){
     if(_numBullets < MAX_BULLETS) {
         Geometry_t bullGeo = { 
             .x = _player.geo.x, 
@@ -171,7 +171,7 @@ void spawnBullet(){
 
         Actor_t bull = { 
             .geo = bullGeo,
-            .dirMotion = RIGHT,
+            .dirMotion = dir,
             .alive = 1
         };
 
@@ -191,7 +191,7 @@ void clearKeys() {
 
 void updateKeys() {
     int key;
-    while ((key = getkey()) != KEY_NOTHING) {
+    while((key = getkey()) != KEY_NOTHING) {
         if(key == MOVE_UP)
             _keys.up = 1;
 
@@ -211,7 +211,6 @@ void updateKeys() {
 
 void updatePlayer(){
     updateKeys();
-
     if(_tickCount % PLAYER_DELAY == 0) {
         if(_keys.up)
             moveUp();
@@ -222,8 +221,8 @@ void updatePlayer(){
         if(_keys.right)
             moveRight();
 
-        if(_keys.fire)
-            spawnBullet();
+        if(_keys.fire && _tickCount % FIRE_RATE == 0)
+            spawnBullet(_player.dirMotion);
 
         clearKeys();
     }
@@ -245,12 +244,14 @@ void moveUp() {
 void moveLeft() {
     if(_player.geo.x > 0) {
         _player.geo.x -= 1;
+        _player.dirMotion = LEFT;
     }
 }
 
 void moveRight() {
     if(_player.geo.x < MAP_WIDTH) {
         _player.geo.x += 1;
+        _player.dirMotion = RIGHT;
     }
 }
 

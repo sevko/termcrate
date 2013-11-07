@@ -2,10 +2,10 @@
  * Macros
  */
 
-#define MOVE_UP KEY_UP
-#define MOVE_LEFT KEY_LEFT
-#define MOVE_RIGHT KEY_RIGHT
-#define FIRE 'x'
+#define MOVE_UP 'w'
+#define MOVE_LEFT 'a'
+#define MOVE_RIGHT 'd'
+#define FIRE 'j'
 #define QUIT KEY_F1
 
 #define PAUSE (1000000 / 60)
@@ -23,6 +23,7 @@
 
 #define BULL_DELAY 1
 #define BULLET_RADIUS 1
+#define FIRE_RATE 3
 #define MAX_BULLETS 50
 
 #define ENEMY_SPAWN_TICKS 300
