@@ -17,7 +17,7 @@
 #define PLAYER_DELAY 1
 #define JUMP_HEIGHT 15
 
-#define ENEM_DELAY 3
+#define ENEM_DELAY 2
 #define ENEMY_RADIUS 1
 
 #define BULL_DELAY 1
@@ -27,7 +27,7 @@
 #define MAX_BULLETS 50
 #define MAX_ENEMIES 50
 
-#define ENEMY_SPAWN_TICKS 300
+#define ENEMY_SPAWN_TICKS 200
 #define GRAVITY_DELAY_TICKS 3
 
 /*

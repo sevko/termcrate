@@ -319,7 +319,7 @@ void enemyMove(Actor_t * enem) {
 			enem->dirMotion *= -1;
 		}
 
-		if(enem->geo.x >= MAP_WIDTH || enem->geo.x <= 0) {
+		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x <= 1) {
 			enem->dirMotion *= -1;
 		} 
 
