@@ -32,6 +32,7 @@ void game(){
 		render();
 		tick();
 	}
+	audio(DEAD);
 }
 
 void config(){
