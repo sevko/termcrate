@@ -10,7 +10,6 @@
 #include "../xterm/xterm_control.h"
 
 char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
-Surface_t _surfaces[10];
 Elements_t _elements;
 
 Actor_t _enemies[MAX_ENEMIES + 1];
@@ -21,7 +20,6 @@ Keys_t _keys;
 
 int _numEnemies;
 int _numBullets;
-int _numSurfaces;
 
 int _gameLost;
 int _tickCount;
@@ -38,7 +36,6 @@ void game(){
 void config(){
 	_numEnemies = 0;
 	_numBullets = 0;
-	_numSurfaces = 0;
 	_gameLost = 0;
 	_tickCount = 0;
 
@@ -141,7 +138,7 @@ void expireEnemies() {
 	int enem;
 	for(enem = 0; enem < _numEnemies; enem++){
 		Actor_t * mob = &_enemies[enem];
-		if((*mob).alive == 0) {
+		if(mob->alive == 0) {
 			int i;
 			for(i = enem; i <= _numEnemies; i++)
 				_enemies[i] = _enemies[i + 1];
@@ -172,6 +169,7 @@ void expireBullets() {
 	int bull;
 	for(bull = 0; bull < _numBullets; bull++){
 		Actor_t * ammo = &_bullets[bull];
+
 		if(ammo->alive == 0) {
 			int i;
 			for(i = bull; i <= _numBullets; i++)
@@ -248,16 +246,11 @@ void updatePlayer(){
 }
 
 int onSurface(Geometry_t geo) {
-	int i;
-	for(i = 0; i < _numSurfaces; i++) {
-		Surface_t surf = _surfaces[i];
-		int diff = surf.p1.y - geo.y;
-		int onLevel = (diff < geo.rad && diff >= 0);
-		int between = geo.x >= surf.p1.x && geo.x <= surf.p2.x;
-		if(onLevel && between)
-			return 1;
-	}
-	return 0;
+	return mapBuf[geo.y][geo.x] == '@';
+}
+
+int belowSurface(Geometry_t geo) {
+	return mapBuf[geo.y - 2][geo.x] == '@';
 }
 
 void moveUp() {
@@ -283,6 +276,9 @@ void moveRight() {
 
 void gravity() {
 	if(_tickCount % GRAVITY_DELAY_TICKS == 0) {
+		if(belowSurface(_player.geo))
+			_player.jumpTime = 0;
+
 		if(_player.jumpTime) {
 			_player.geo.y -= G;
 			_player.jumpTime -= 1;
@@ -314,14 +310,10 @@ void enemyMove(Actor_t * enem) {
 
 void bulletMove(Actor_t * bull) {
 	if(_tickCount % BULL_DELAY == 0) {
-		Geometry_t newGeo = {
-			.x = bull->geo.x,
-			.y = bull->geo.y + 1
-		};
+		int inSurface = mapBuf[bull->geo.y - 1][bull->geo.x] == '@';
 
-		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || onSurface(newGeo)) {
+		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || inSurface) {
 			bull->alive = 0;
-			return;
 		}
 
 		bull->geo.x += bull->dirMotion;
