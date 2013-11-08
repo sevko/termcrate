@@ -93,6 +93,9 @@ void tick();
 int abs(int val);
 int collision(Geometry_t g1, Geometry_t g2);
 
+void updateCrate();
+void resetCrate();
+
 void updateEnemies();
 void spawnEnemy();
 void expireEnemies();
@@ -115,9 +118,6 @@ void moveLeft();
 void moveRight();
 void moveDown();
 void gravity();
-
-//void crateCollision();
-//void resetCrate();
 
 void enemyMove(Actor_t * enem);
 void bulletMove(Actor_t * bull);

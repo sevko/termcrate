@@ -41,9 +41,10 @@ void config(){
 
 	loadMap();
 	loadElements();
-	//resetCrate();
+	resetCrate();
 
 	_player = _elements.player;
+	_crate = _elements.crate;
 
 	Keys_t keys = {
 		.up = 0,
@@ -76,7 +77,7 @@ void loadElements(){
 	Weapon_t shotgun = { .ammo = 20, .rof = 30 };
 	Weapon_t machineGun = { .ammo = 100, .rof = 2 };
 
-	Crate_t crate = { .geo = geo };
+	Crate_t crate = { .geo = geo, .weapon = pistol};
 
 	Player_t player = { 
 		.geo = geo,
@@ -99,6 +100,7 @@ void tick(){
 	updateBullets();
 	updateEnemies();
 	updatePlayer();
+	updateCrate();
 	_tickCount++;
 }
 
@@ -111,6 +113,22 @@ int abs(int val){
 int collision(Geometry_t g1, Geometry_t g2){
 	int sumRad = g1.rad + g2.rad;
 	return abs(g1.y - g2.y + 1) < sumRad && abs(g1.x - g2.x + 1) < sumRad;
+}
+
+void updateCrate(){
+	if(!onSurface(_crate.geo))
+		_crate.geo.y++;
+
+	if(collision(_crate.geo, _player.geo)){
+		_player.weapon = _crate.weapon;
+		resetCrate();
+	}
+}
+
+void resetCrate(){
+	_crate.geo.x = rand() % MAP_WIDTH;
+	_crate.geo.y = rand() % MAP_HEIGHT;
+	_crate.weapon = _elements.machineGun;
 }
 
 void updateEnemies(){
@@ -248,11 +266,11 @@ void updatePlayer(){
 }
 
 int onSurface(Geometry_t geo) {
-	return mapBuf[geo.y][geo.x] == '@';
+	return mapBuf[geo.y][geo.x - 1] == '@';
 }
 
 int belowSurface(Geometry_t geo) {
-	return mapBuf[geo.y - 2][geo.x] == '@';
+	return mapBuf[geo.y - 2][geo.x - 1] == '@';
 }
 
 void moveUp() {
@@ -263,15 +281,13 @@ void moveUp() {
 }
 
 void moveLeft() {
-	//crateCollision();
-	if(_player.geo.x > 0) {
+	if(_player.geo.x > 1) {
 		_player.geo.x -= 1;
 		_player.dirMotion = LEFT;
 	}
 }
 
 void moveRight() {
-	//crateCollision();
 	if(_player.geo.x < MAP_WIDTH) {
 		_player.geo.x += 1;
 		_player.dirMotion = RIGHT;
@@ -279,7 +295,6 @@ void moveRight() {
 }
 
 void moveDown() {
-	//crateCollision();
 	if(!onSurface(_player.geo))
 		_player.geo.y += G;
 }
@@ -298,20 +313,6 @@ void gravity() {
 	}
 }
 
-//void crateCollision(){
-	//if(collision(_player.geo, _crate.geo)){
-		//_player.weapon = _crate.weapon;
-		//resetCrate();
-	//}
-//}
-
-//void resetCrate(){
-	//Surface_t randSurface = _surfaces[rand() % _numSurfaces];
-	//_crate.geo.x = randSurface.p2.x + rand() % (randSurface.p1.x - randSurface.p2.x);
-	//_crate.geo.y = (randSurface.p1.y) - 1;
-	//_crate.weapon = _elements.machineGun;
-//}
-
 void enemyMove(Actor_t * enem) {
 	if(_tickCount % ENEM_DELAY == 0) {
 		if(enem->geo.y >= MAP_HEIGHT) {
@@ -319,7 +320,7 @@ void enemyMove(Actor_t * enem) {
 			enem->dirMotion *= -1;
 		}
 
-		if(enem->geo.x >= MAP_WIDTH || enem->geo.x <= 0) {
+		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x <= 1) {
 			enem->dirMotion *= -1;
 		} 
 
