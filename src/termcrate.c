@@ -75,7 +75,12 @@ void loadElements(){
 	};
 
 	Crate_t crate = { .geo = geo };
-	Player_t player = { .geo = geo };
+	Player_t player = { 
+		.geo = geo,
+		.dirMotion = RIGHT,
+		.reload = 0,
+		.jumpTime = 0
+	};
 
 	Weapon_t pistol = { .ammo = 1000000, .rof = 15 };
 	Weapon_t shotgun = { .ammo = 20, .rof = 30 };
@@ -239,16 +244,15 @@ void updatePlayer(){
 		clearKeys();
 		_player.reload += 1;
 	}
-	if(_tickCount % GRAVITY_DELAY_TICKS == 0)
-		moveDown();
+	gravity();
 }
 
 int onSurface(Geometry_t geo) {
 	int i;
 	for(i = 0; i < _numSurfaces; i++) {
 		Surface_t surf = _surfaces[i];
-		int diff = geo.y - surf.p1.y;
-		int onLevel = (diff <= geo.rad && diff >= 0);
+		int diff = surf.p1.y - geo.y;
+		int onLevel = (diff < geo.rad && diff >= 0);
 		int between = geo.x >= surf.p1.x && geo.x <= surf.p2.x;
 		if(onLevel && between)
 			return 1;
@@ -259,7 +263,7 @@ int onSurface(Geometry_t geo) {
 void moveUp() {
 	if(onSurface(_player.geo) && _player.geo.y > 0) {
 		audio(JUMP);
-		_player.geo.y -= JUMP_HEIGHT;
+		_player.jumpTime = JUMP_HEIGHT;
 	}
 }
 
@@ -277,9 +281,14 @@ void moveRight() {
 	}
 }
 
-void moveDown() {
-	if(!onSurface(_player.geo)) {
-		_player.geo.y += G;
+void gravity() {
+	if(_tickCount % GRAVITY_DELAY_TICKS == 0) {
+		if(_player.jumpTime) {
+			_player.geo.y -= G;
+			_player.jumpTime -= 1;
+		} else if(!onSurface(_player.geo)) {
+			_player.geo.y += G;
+		}
 	}
 }
 
@@ -307,10 +316,12 @@ void bulletMove(Actor_t * bull) {
 	if(_tickCount % BULL_DELAY == 0) {
 		Geometry_t newGeo = {
 			.x = bull->geo.x,
-			.y = bull->geo.y - 1
+			.y = bull->geo.y + 1
 		};
+
 		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || onSurface(newGeo)) {
 			bull->alive = 0;
+			return;
 		}
 
 		bull->geo.x += bull->dirMotion;
