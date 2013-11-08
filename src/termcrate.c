@@ -44,6 +44,7 @@ void config(){
 
 	loadMap();
 	loadElements();
+	resetCrate();
 
 	_player = _elements.player;
 
@@ -74,17 +75,18 @@ void loadElements(){
 		.alive = 1
 	};
 
-	Crate_t crate = { .geo = geo };
-	Player_t player = { .geo = geo };
-
 	Weapon_t pistol = { .ammo = 1000000, .rof = 15 };
 	Weapon_t shotgun = { .ammo = 20, .rof = 30 };
 	Weapon_t machineGun = { .ammo = 100, .rof = 2 };
+
+	Crate_t crate = { .geo = geo };
+	Player_t player = { .geo = geo, .weapon = pistol};
 
 	_elements.enemy = actor;
 	_elements.bullet = actor;
 	_elements.crate = crate;
 	_elements.player = player;
+
 	_elements.pistol = pistol;
 	_elements.shotgun = shotgun;
 	_elements.machineGun = machineGun;
@@ -232,9 +234,8 @@ void updatePlayer(){
 		if(_keys.right)
 			moveRight();
 
-		if(_keys.fire && _player.reload >= _player.weapon.rof){
+		if(_keys.fire && _player.reload >= _player.weapon.rof)
 			spawnBullet(_player.dirMotion);
-		}
 
 		clearKeys();
 		_player.reload += 1;
@@ -264,6 +265,7 @@ void moveUp() {
 }
 
 void moveLeft() {
+	crateCollision();
 	if(_player.geo.x > 0) {
 		_player.geo.x -= 1;
 		_player.dirMotion = LEFT;
@@ -271,6 +273,7 @@ void moveLeft() {
 }
 
 void moveRight() {
+	crateCollision();
 	if(_player.geo.x < MAP_WIDTH) {
 		_player.geo.x += 1;
 		_player.dirMotion = RIGHT;
@@ -278,9 +281,25 @@ void moveRight() {
 }
 
 void moveDown() {
+	crateCollision();
 	if(!onSurface(_player.geo)) {
 		_player.geo.y += G;
 	}
+}
+
+void crateCollision(){
+	if(collision(_player.geo, _crate.geo)){
+		_player.weapon = _crate.weapon;
+		resetCrate();
+	}
+}
+
+
+void resetCrate(){
+	Surface_t randSurface = _surfaces[rand() % _numSurfaces];
+	_crate.geo.x = randSurface.p1.x + rand() % (randSurface.p2.x - randSurface.p1.x);
+	_crate.geo.y = (randSurface.p1.y);
+	_crate.weapon = _elements.machineGun;
 }
 
 void enemyMove(Actor_t * enem) {

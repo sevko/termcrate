@@ -69,8 +69,8 @@ void renderActors(){
 		drawSprite(SPRITE_BULLET, COLOR_BULLET);
 	}
 
-	//xt_par2(XT_SET_ROW_COL_POS, _crate.geo.y, _crate.geo.x);
-	//drawSprite(SPRITE_CRATE, COLOR_CRATE);
+	xt_par2(XT_SET_ROW_COL_POS, _crate.geo.y, _crate.geo.x);
+	drawSprite(SPRITE_CRATE, COLOR_CRATE);
 
 	xt_par2(XT_SET_ROW_COL_POS, _player.geo.y, _player.geo.x);
 	drawSprite(SPRITE_PLAYER, COLOR_PLAYER);
