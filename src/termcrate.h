@@ -116,8 +116,8 @@ void moveRight();
 void moveDown();
 void gravity();
 
-void crateCollision();
-void resetCrate();
+//void crateCollision();
+//void resetCrate();
 
 void enemyMove(Actor_t * enem);
 void bulletMove(Actor_t * bull);

@@ -41,7 +41,7 @@ void config(){
 
 	loadMap();
 	loadElements();
-	resetCrate();
+	//resetCrate();
 
 	_player = _elements.player;
 
@@ -263,7 +263,7 @@ void moveUp() {
 }
 
 void moveLeft() {
-	crateCollision();
+	//crateCollision();
 	if(_player.geo.x > 0) {
 		_player.geo.x -= 1;
 		_player.dirMotion = LEFT;
@@ -271,7 +271,7 @@ void moveLeft() {
 }
 
 void moveRight() {
-	crateCollision();
+	//crateCollision();
 	if(_player.geo.x < MAP_WIDTH) {
 		_player.geo.x += 1;
 		_player.dirMotion = RIGHT;
@@ -279,7 +279,7 @@ void moveRight() {
 }
 
 void moveDown() {
-	crateCollision();
+	//crateCollision();
 	if(!onSurface(_player.geo))
 		_player.geo.y += G;
 }
@@ -298,12 +298,12 @@ void gravity() {
 	}
 }
 
-void crateCollision(){
-	if(collision(_player.geo, _crate.geo)){
-		_player.weapon = _crate.weapon;
-		resetCrate();
-	}
-}
+//void crateCollision(){
+	//if(collision(_player.geo, _crate.geo)){
+		//_player.weapon = _crate.weapon;
+		//resetCrate();
+	//}
+//}
 
 //void resetCrate(){
 	//Surface_t randSurface = _surfaces[rand() % _numSurfaces];
