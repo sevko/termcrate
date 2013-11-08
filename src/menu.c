@@ -3,6 +3,7 @@
 
 #include "termcrate.h"
 #include "menu.h"
+#include "audio.h"
 
 #include "../xterm/keyboard.h"
 
@@ -32,19 +33,21 @@ void menu(){
 
 void configMenu(){
 	Button_t play = {
-		.x = BUTTON_X,
-		.y = 10,
+		.x = (BUTTON_X - 2), //center, account for name length
+		.y = 16,
 		.name = "play"
 	};
 
 	Button_t exit = {
-		.x = BUTTON_X,
-		.y = 10,
+		.x = (BUTTON_X - 2),
+		.y = 22,
 		.name = "exit"
 	};
 
 	_buttons[0] = play;
 	_buttons[1] = exit;
+
+	audio(MENU_THEME);
 }
 
 void menuMoveUp(){

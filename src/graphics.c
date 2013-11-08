@@ -34,11 +34,16 @@ void renderMenu(){
 	int button;
 	for(button = 0; button < NUM_BUTTONS; button++){
 		Button_t but = _buttons[button];
+		xt_par2(XT_SET_ROW_COL_POS, but.y, but.x);
 		if(button == _selectedButton)
 			xt_par0(COLOR_SELECTED_BUTTON);
+
+		xt_par0(XT_CH_BOLD);
+		xt_par0(COLOR_BUTTON);
 		printf(but.name);
 		xt_par0(XT_CH_NORMAL);
 	}
+	xt_par2(XT_SET_ROW_COL_POS, 1, 1);
 }
 
 void renderMap(){
