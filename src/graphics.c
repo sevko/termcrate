@@ -29,6 +29,14 @@ void render(){
 
 void renderMenu(){
 	clearScreen();
+
+	xt_par0(XT_CH_BOLD);
+	xt_par0(XT_BG_RED);
+	xt_par0(XT_CH_YELLOW);
+	xt_par2(XT_SET_ROW_COL_POS, 3, 50);
+	printf(SPRITE_MENU);
+	xt_par0(XT_CH_NORMAL);
+
 	int button;
 	for(button = 0; button < NUM_BUTTONS; button++){
 		Button_t but = _buttons[button];
