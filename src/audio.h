@@ -6,3 +6,4 @@
 #define JUMP AUD_PATH "jump.wav"
 
 void audio(char * filePath);
+void stopAudio();

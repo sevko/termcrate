@@ -61,6 +61,7 @@ void menuMoveDown(){
 }
 
 void buttonFunction(){
+	stopAudio();
 	if(_selectedButton == PLAY)
 		game();
 

@@ -8,3 +8,7 @@ void audio(char * filePath){
 	strcat(sysCommand, " &"); 		//start in another thread
 	system(sysCommand);
 }
+
+void stopAudio(){
+	system("killall -9 aplay");
+}
