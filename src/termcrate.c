@@ -80,7 +80,13 @@ void loadElements(){
 	Weapon_t machineGun = { .ammo = 100, .rof = 2 };
 
 	Crate_t crate = { .geo = geo };
-	Player_t player = { .geo = geo, .weapon = pistol};
+
+	Player_t player = { 
+		.geo = geo,
+		.dirMotion = RIGHT,
+		.jumpTime = 0,
+		.weapon = pistol
+	};
 
 	_elements.enemy = actor;
 	_elements.bullet = actor;
@@ -240,16 +246,15 @@ void updatePlayer(){
 		clearKeys();
 		_player.reload += 1;
 	}
-	if(_tickCount % GRAVITY_DELAY_TICKS == 0)
-		moveDown();
+	gravity();
 }
 
 int onSurface(Geometry_t geo) {
 	int i;
 	for(i = 0; i < _numSurfaces; i++) {
 		Surface_t surf = _surfaces[i];
-		int diff = geo.y - surf.p1.y;
-		int onLevel = (diff <= geo.rad && diff >= 0);
+		int diff = surf.p1.y - geo.y;
+		int onLevel = (diff < geo.rad && diff >= 0);
 		int between = geo.x >= surf.p1.x && geo.x <= surf.p2.x;
 		if(onLevel && between)
 			return 1;
@@ -260,7 +265,7 @@ int onSurface(Geometry_t geo) {
 void moveUp() {
 	if(onSurface(_player.geo) && _player.geo.y > 0) {
 		audio(JUMP);
-		_player.geo.y -= JUMP_HEIGHT;
+		_player.jumpTime = JUMP_HEIGHT;
 	}
 }
 
@@ -282,8 +287,18 @@ void moveRight() {
 
 void moveDown() {
 	crateCollision();
-	if(!onSurface(_player.geo)) {
+	if(!onSurface(_player.geo))
 		_player.geo.y += G;
+}
+
+void gravity() {
+	if(_tickCount % GRAVITY_DELAY_TICKS == 0) {
+		if(_player.jumpTime) {
+			_player.geo.y -= G;
+			_player.jumpTime -= 1;
+		} else if(!onSurface(_player.geo)) {
+			_player.geo.y += G;
+		}
 	}
 }
 
@@ -294,11 +309,10 @@ void crateCollision(){
 	}
 }
 
-
 void resetCrate(){
 	Surface_t randSurface = _surfaces[rand() % _numSurfaces];
-	_crate.geo.x = randSurface.p1.x + rand() % (randSurface.p2.x - randSurface.p1.x);
-	_crate.geo.y = (randSurface.p1.y);
+	_crate.geo.x = randSurface.p2.x + rand() % (randSurface.p1.x - randSurface.p2.x);
+	_crate.geo.y = (randSurface.p1.y) - 1;
 	_crate.weapon = _elements.machineGun;
 }
 
@@ -326,10 +340,12 @@ void bulletMove(Actor_t * bull) {
 	if(_tickCount % BULL_DELAY == 0) {
 		Geometry_t newGeo = {
 			.x = bull->geo.x,
-			.y = bull->geo.y - 1
+			.y = bull->geo.y + 1
 		};
+
 		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || onSurface(newGeo)) {
 			bull->alive = 0;
+			return;
 		}
 
 		bull->geo.x += bull->dirMotion;

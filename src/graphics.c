@@ -102,34 +102,34 @@ void resetCursor(){
 }
 
 void loadSurfaces(){
-    int row, col, on = 0; 
-    for(row = 0; row <= MAP_HEIGHT; row++) {
-        Geometry_t p1 = {
-            .x = -1,
-            .y = -1
-        };
-        Geometry_t p2 = {
-            .x = -1,
-            .y = -1
-        };
+	int row, col, on = 0; 
+	for(row = 0; row <= MAP_HEIGHT; row++) {
+		Geometry_t p1 = {
+			.x = -1,
+			.y = -1
+		};
+		Geometry_t p2 = {
+			.x = -1,
+			.y = -1
+		};
 
-        for(col = 0; col <= MAP_WIDTH; col++) {
-            if(!on && mapBuf[row][col] == '@') {
-                on = 1;
-                p1.x = col;
-                p1.y = row;
-            } else if(on && (mapBuf[row][col] != '@' || col >= MAP_WIDTH)) {
-                on = 0;
-                p2.x = col;
-                p2.y = row;
-                Surface_t surface = {
-                    .p1 = p1,
-                    .p2 = p2
-                };
-                _surfaces[_numSurfaces++] = surface;
-            }
-        }
-    }
+		for(col = 0; col <= MAP_WIDTH; col++) {
+			if(!on && mapBuf[row][col] == '@') {
+				on = 1;
+				p1.x = col;
+				p1.y = row;
+			} else if(on && (mapBuf[row][col] != '@' || col >= MAP_WIDTH)) {
+				on = 0;
+				p2.x = col;
+				p2.y = row;
+				Surface_t surface = {
+					.p1 = p1,
+					.p2 = p2
+				};
+				_surfaces[_numSurfaces++] = surface;
+			}
+		}
+	}
 }
 
 void loadMap(){
@@ -139,5 +139,5 @@ void loadMap(){
 	for(row = 0; row < MAP_HEIGHT; row++)
 		fgets(mapBuf[row], MAP_BUF_WIDTH, map);
 
-        loadSurfaces();
+	loadSurfaces();
 }

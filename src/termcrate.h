@@ -15,7 +15,7 @@
 #define G 1
 
 #define PLAYER_DELAY 1
-#define JUMP_HEIGHT 18
+#define JUMP_HEIGHT 15
 
 #define ENEM_DELAY 3
 #define ENEMY_RADIUS 1
@@ -28,21 +28,18 @@
 #define MAX_ENEMIES 50
 
 #define ENEMY_SPAWN_TICKS 300
-#define GRAVITY_DELAY_TICKS 4
+#define GRAVITY_DELAY_TICKS 3
 
 /*
  * Structs
  */
 
 typedef struct {
-	int x, 
-		y, 
-		rad;	//radius
+	int x, y, rad;		//radius
 } Geometry_t;
 
 typedef struct {
-	Geometry_t p1,
-			   p2;
+	Geometry_t p1, p2;
 } Surface_t;
 
 typedef struct {
@@ -64,6 +61,7 @@ typedef struct {
 	Weapon_t weapon;
 	int dirMotion;
 	int reload;
+	int jumpTime;
 } Player_t;
 
 typedef struct {
@@ -78,8 +76,8 @@ typedef struct {
 } Elements_t;
 
 typedef struct {
-	int up, left, right;
-	int fire;
+		int up, left, right;
+		int fire;
 } Keys_t;
 
 /*
@@ -116,6 +114,7 @@ void moveUp();
 void moveLeft();
 void moveRight();
 void moveDown();
+void gravity();
 
 void crateCollision();
 void resetCrate();
