@@ -305,12 +305,12 @@ void crateCollision(){
 	}
 }
 
-void resetCrate(){
-	Surface_t randSurface = _surfaces[rand() % _numSurfaces];
-	_crate.geo.x = randSurface.p2.x + rand() % (randSurface.p1.x - randSurface.p2.x);
-	_crate.geo.y = (randSurface.p1.y) - 1;
-	_crate.weapon = _elements.machineGun;
-}
+//void resetCrate(){
+	//Surface_t randSurface = _surfaces[rand() % _numSurfaces];
+	//_crate.geo.x = randSurface.p2.x + rand() % (randSurface.p1.x - randSurface.p2.x);
+	//_crate.geo.y = (randSurface.p1.y) - 1;
+	//_crate.weapon = _elements.machineGun;
+//}
 
 void enemyMove(Actor_t * enem) {
 	if(_tickCount % ENEM_DELAY == 0) {
