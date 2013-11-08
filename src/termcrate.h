@@ -19,12 +19,13 @@
 
 #define ENEM_DELAY 3
 #define ENEMY_RADIUS 1
-#define MAX_ENEMIES 50
 
 #define BULL_DELAY 1
 #define BULLET_RADIUS 1
-#define FIRE_RATE 15
+
+#define NUM_WEAPONS 3
 #define MAX_BULLETS 50
+#define MAX_ENEMIES 50
 
 #define ENEMY_SPAWN_TICKS 300
 #define GRAVITY_DELAY_TICKS 4
@@ -34,30 +35,34 @@
  */
 
 typedef struct {
-    int x, 
-        y, 
-        rad; 	//radius
+	int x, 
+		y, 
+		rad;	//radius
 } Geometry_t;
 
 typedef struct {
-    Geometry_t p1,
-               p2;
+	Geometry_t p1,
+			   p2;
 } Surface_t;
 
 typedef struct {
-    Geometry_t geo;
-    int dirMotion;
-    int alive;
+	Geometry_t geo;
+	int dirMotion, alive;
 } Actor_t;
 
 typedef struct {
-    Geometry_t geo;
+	Geometry_t geo;
 } Crate_t;
 
 typedef struct {
-    Geometry_t geo;
-    int dirMotion;
-    int reload;
+	int ammo, rof;
+} Weapon_t;
+
+typedef struct {
+	Geometry_t geo;
+	Weapon_t weapon;
+	int dirMotion;
+	int reload;
 } Player_t;
 
 typedef struct {
@@ -65,13 +70,14 @@ typedef struct {
 	Actor_t bullet;
 	Crate_t crate;
 	Player_t player;
+	Weapon_t pistol;
+	Weapon_t shotgun;
+	Weapon_t machineGun;
 } Elements_t;
 
 typedef struct {
-    int up;
-    int left;
-    int right;
-    int fire;
+	int up, left, right;
+	int fire;
 } Keys_t;
 
 /*
