@@ -35,10 +35,12 @@
  */
 
 typedef struct {
-	int x, 
-		y, 
-		rad;    //radius
+	int x, y, rad;		//radius
 } Geometry_t;
+
+typedef struct {
+	Geometry_t p1, p2;
+} Surface_t;
 
 typedef struct {
 	Geometry_t geo;
@@ -46,12 +48,13 @@ typedef struct {
 } Actor_t;
 
 typedef struct {
-	Geometry_t geo;
-} Crate_t;
-
-typedef struct {
 	int ammo, rof;
 } Weapon_t;
+
+typedef struct {
+	Geometry_t geo;
+	Weapon_t weapon;
+} Crate_t;
 
 typedef struct {
 	Geometry_t geo;
@@ -66,6 +69,7 @@ typedef struct {
 	Actor_t bullet;
 	Crate_t crate;
 	Player_t player;
+
 	Weapon_t pistol;
 	Weapon_t shotgun;
 	Weapon_t machineGun;
@@ -110,6 +114,10 @@ void moveUp();
 void moveLeft();
 void moveRight();
 void moveDown();
+void gravity();
+
+void crateCollision();
+void resetCrate();
 
 void enemyMove(Actor_t * enem);
 void bulletMove(Actor_t * bull);
