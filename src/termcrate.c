@@ -10,6 +10,7 @@
 #include "../xterm/xterm_control.h"
 
 char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
+Weapon_t _weapons[NUM_WEAPONS];
 Elements_t _elements;
 
 Actor_t _enemies[MAX_ENEMIES + 1];
@@ -41,6 +42,7 @@ void config(){
 
 	loadMap();
 	loadElements();
+	loadWeapons();
 	resetCrate();
 
 	_player = _elements.player;
@@ -55,6 +57,15 @@ void config(){
 	_keys = keys;
 
 	audio(THEME);
+}
+
+void loadWeapons(){
+	Weapon_t shotgun = { .ammo = 20, .rof = 30 };
+	Weapon_t machineGun = { .ammo = 100, .rof = 2 };
+
+	_weapons[0] = _elements.pistol;
+	_weapons[1] = shotgun;
+	_weapons[2] = machineGun;
 }
 
 //populates _elements with an instance of each 
@@ -74,9 +85,6 @@ void loadElements(){
 	};
 
 	Weapon_t pistol = { .ammo = 1000000, .rof = 15 };
-	Weapon_t shotgun = { .ammo = 20, .rof = 30 };
-	Weapon_t machineGun = { .ammo = 100, .rof = 2 };
-
 	Crate_t crate = { .geo = geo, .weapon = pistol};
 
 	Player_t player = { 
@@ -92,8 +100,6 @@ void loadElements(){
 	_elements.player = player;
 
 	_elements.pistol = pistol;
-	_elements.shotgun = shotgun;
-	_elements.machineGun = machineGun;
 }
 
 void tick(){
@@ -128,7 +134,7 @@ void updateCrate(){
 void resetCrate(){
 	_crate.geo.x = rand() % MAP_WIDTH;
 	_crate.geo.y = rand() % MAP_HEIGHT;
-	_crate.weapon = _elements.machineGun;
+	_crate.weapon = _weapons[rand() % NUM_WEAPONS];
 }
 
 void updateEnemies(){

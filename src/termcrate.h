@@ -71,8 +71,6 @@ typedef struct {
 	Player_t player;
 
 	Weapon_t pistol;
-	Weapon_t shotgun;
-	Weapon_t machineGun;
 } Elements_t;
 
 typedef struct {
@@ -86,6 +84,8 @@ typedef struct {
 
 void game();
 void config();
+
+void loadWeapons();
 void loadElements();
 
 void tick();
