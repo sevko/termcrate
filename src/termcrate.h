@@ -15,7 +15,7 @@
 #define G 1
 
 #define PLAYER_DELAY 1
-#define JUMP_HEIGHT 15
+#define JUMP_HEIGHT 20
 
 #define ENEM_DELAY 2
 #define ENEMY_RADIUS 1

@@ -3,12 +3,12 @@
 #include <stdlib.h>
 
 void audio(char * filePath){
-	char sysCommand[50] = "afplay ";
+	char sysCommand[50] = "aplay --quiet ";
 	strcat(sysCommand, filePath);
 	strcat(sysCommand, " &"); 		//start in another thread
 	system(sysCommand);
 }
 
 void stopAudio(){
-	system("killall -9 afplay");
+	system("killall -9 aplay");
 }

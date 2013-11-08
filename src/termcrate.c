@@ -32,6 +32,7 @@ void game(){
 		render();
 		tick();
 	}
+	menu();
 }
 
 void config(){
@@ -132,6 +133,7 @@ void updateCrate(){
 }
 
 void resetCrate(){
+	audio(CRATE);
 	_crate.geo.x = rand() % MAP_WIDTH;
 	_crate.geo.y = rand() % MAP_HEIGHT;
 	_crate.weapon = _weapons[rand() % NUM_WEAPONS];
