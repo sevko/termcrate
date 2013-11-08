@@ -15,15 +15,21 @@ extern Actor_t _enemies[MAX_ENEMIES + 1];
 extern Actor_t _bullets[MAX_BULLETS + 1];
 extern Crate_t _crate;
 extern Player_t _player;
+extern Message_t _messages[3];
 
 extern int _numEnemies;
 extern int _numBullets;
 extern int _selectedButton;
 
+extern char * pistolMessage;
+extern char * shotgunMessage;
+extern char * machinegunMessage;
+
 void render(){
 	clearScreen();
 	renderMap();
 	renderActors();
+	renderMessages();
 	resetCursor();
 }
 
@@ -74,6 +80,18 @@ void renderActors(){
 	drawSprite(SPRITE_PLAYER, COLOR_PLAYER);
 }
 
+void renderMessages() {
+	if(_messages[0].display) {
+		drawMessage(&_messages[0]);
+	}
+	if(_messages[1].display) {
+		drawMessage(&_messages[1]);
+	}
+	if(_messages[2].display) {
+		drawMessage(&_messages[2]);
+	}
+}
+
 void addActor(int enem, Actor_t newActor){
 	if(enem && _numEnemies < MAX_ENEMIES) {
 		_enemies[_numEnemies++] = newActor;
@@ -88,6 +106,23 @@ void drawSprite(char * sprite, char * color){
 	xt_par0(color);
 	printf(sprite);
 	xt_par0(XT_CH_NORMAL);
+}
+
+void drawMessage(Message_t * message) {
+	int row = 0, col = 0 , len = 0;
+	char * text = message->text;
+	while(len < strlen(text)) {
+		if(text[len] == '\n'){
+			row++;
+			col = 0;
+		} else {
+			xt_par2(XT_SET_ROW_COL_POS, message->geo.y + row, message->geo.x + col);
+			printf("%c", text[len]);
+			col++;
+		}
+		len++;
+	}
+	message->display -= 1;
 }
 
 void clearScreen(){

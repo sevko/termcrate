@@ -18,9 +18,11 @@
 void render();
 void renderMap();
 void renderActors();
+void renderMessages();
 
 void addActor(int enem, Actor_t newActor);
 void drawSprite(char * sprite, char * color);
+void drawMessage(Message_t * message);
 
 void clearScreen();
 void resetCursor();

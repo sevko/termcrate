@@ -74,6 +74,12 @@ typedef struct {
 } Elements_t;
 
 typedef struct {
+	char * text;
+	int display;
+	Geometry_t geo;
+} Message_t;
+
+typedef struct {
 	int up, left, right;
 	int fire;
 } Keys_t;
@@ -87,6 +93,7 @@ void config();
 
 void loadWeapons();
 void loadElements();
+void loadMessages();
 
 void tick();
 
