@@ -15,7 +15,7 @@
 #define G 1
 
 #define PLAYER_DELAY 1
-#define JUMP_HEIGHT 20
+#define JUMP_HEIGHT 10
 
 #define ENEM_DELAY 2
 #define ENEMY_RADIUS 1
@@ -98,11 +98,11 @@ void resetCrate();
 
 void updateEnemies();
 void spawnEnemy();
-void expireEnemies();
 
 void updateBullets();
 void spawnBullet();
-void expireBullets();
+
+void expireActors(Actor_t actors[], int * numAct);
 
 void clearKeys();
 void updateKeys();

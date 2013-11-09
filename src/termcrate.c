@@ -152,7 +152,7 @@ void updateEnemies(){
 	}
 
 	spawnEnemy();
-	expireEnemies();
+	expireActors(_enemies, &_numEnemies);
 }
 
 void spawnEnemy(){
@@ -160,20 +160,6 @@ void spawnEnemy(){
 		Actor_t enemy = _elements.enemy;
 		enemy.geo.x = 88;
 		addActor(1, enemy);
-	}
-}
-
-void expireEnemies() {
-	int enem;
-	for(enem = 0; enem < _numEnemies; enem++){
-		Actor_t * mob = &_enemies[enem];
-		if(mob->alive == 0) {
-			int i;
-			for(i = enem; i <= _numEnemies; i++)
-				_enemies[i] = _enemies[i + 1];
-
-			_numEnemies--;
-		}
 	}
 }
 
@@ -187,26 +173,9 @@ void updateBullets(){
 				ammo->alive = mob->alive = 0;
 			}
 		}
-
 		bulletMove(ammo);
 	}
-
-	expireBullets();
-}
-
-void expireBullets() {
-	int bull;
-	for(bull = 0; bull < _numBullets; bull++){
-		Actor_t * ammo = &_bullets[bull];
-
-		if(ammo->alive == 0) {
-			int i;
-			for(i = bull; i <= _numBullets; i++)
-				_bullets[i] = _bullets[i + 1];
-
-			_numBullets--;
-		}
-	}
+	expireActors(_bullets, &_numBullets);
 }
 
 void spawnBullet(int dir){
@@ -221,13 +190,19 @@ void spawnBullet(int dir){
 	_player.reload = 0;
 }
 
+void expireActors(Actor_t * actors, int * numAct) {
+	int act;
+	for(act = 0; act < *numAct; act++)
+		if(!actors[act].alive) {
+			int shift;
+			for(shift = act; shift <= *numAct; shift++)
+				actors[shift] = actors[shift + 1];
+			(*numAct)--;
+		}
+}
+
 void clearKeys() {
-	Keys_t keys = {
-		.up = 0,
-		.left = 0,
-		.right = 0,
-		.fire = 0
-	};
+	Keys_t keys = {0};
 	_keys = keys;
 }
 
