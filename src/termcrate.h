@@ -85,15 +85,7 @@ typedef struct {
  */
 
 void game();
-void config();
-
-void loadWeapons();
-void loadElements();
-
 void tick();
-
-int abs(int val);
-int collision(Geometry_t g1, Geometry_t g2);
 
 void updateCrate();
 void resetCrate();
@@ -104,13 +96,8 @@ void spawnEnemy();
 void updateBullets();
 void spawnBullet();
 
-void expireActors(Actor_t actors[], int * numAct);
-
-void clearKeys();
 void updateKeys();
 void updatePlayer();
-int onSurface(Geometry_t geo);
-int belowSurface(Geometry_t geo);
 
 int surfaceBottom(Geometry_t geo);
 int surfaceTop(Geometry_t geo);
@@ -121,7 +108,6 @@ void moveUp();
 void moveLeft();
 void moveRight();
 void moveDown();
-void gravity();
 
 void enemyMove(Actor_t * enem);
 void bulletMove(Actor_t * bull);

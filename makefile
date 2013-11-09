@@ -1,11 +1,14 @@
 CC = gcc -Ofast -Wall
 xterm = xterm -geom 176x44 -name termcrate
 
-all: build build/termcrate.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o
-	$(CC) build/termcrate.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o -o termcrate
+all: build build/termcrate.o build/utils.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o
+	$(CC) build/termcrate.o build/utils.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o -o termcrate
 
 build/termcrate.o: src/termcrate.c
 	$(CC) -c src/termcrate.c -o build/termcrate.o
+
+build/utils.o: src/utils.c
+	$(CC) -c src/utils.c -o build/utils.o
 
 build/graphics.o: src/graphics.c
 	$(CC) -c src/graphics.c -o build/graphics.o

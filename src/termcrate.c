@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "termcrate.h"
+#include "utils.h"
 #include "graphics.h"
 #include "audio.h"
 #include "menu.h"
@@ -20,11 +21,8 @@ Crate_t _crate;
 Player_t _player;
 Keys_t _keys;
 
-int _numEnemies;
-int _numBullets;
-
-int _gameLost;
-int _tickCount;
+int _numEnemies, _numBullets;
+int _gameLost, _tickCount;
 
 void game(){
 	config();
@@ -36,82 +34,12 @@ void game(){
 	menu();
 }
 
-void config(){
-	_numEnemies = 0;
-	_numBullets = 0;
-	_gameLost = 0;
-	_tickCount = 0;
-
-	loadMap();
-	loadElements();
-	loadWeapons();
-	resetCrate();
-
-	_player = _elements.player;
-	_crate = _elements.crate;
-
-	Keys_t keys = { 0 };
-	_keys = keys;
-
-	audio(THEME);
-}
-
-void loadWeapons(){
-	Weapon_t shotgun = { .ammo = 20, .rof = 30 };
-	Weapon_t machineGun = { .ammo = 100, .rof = 2 };
-
-	_weapons[0] = _elements.pistol;
-	_weapons[1] = shotgun;
-	_weapons[2] = machineGun;
-}
-
-void loadElements(){
-	Geometry_t geo = {
-		.x = 1, 
-		.y = 5, 
-		.rad = 1
-	};
-
-	Actor_t actor = {
-		.geo = geo,
-		.dirMotion = RIGHT,
-		.alive = 1
-	};
-
-	Weapon_t pistol = { .ammo = 1000000, .rof = 15 };
-	Crate_t crate = { .geo = geo, .weapon = pistol};
-
-	Player_t player = { 
-		.geo = geo,
-		.dirMotion = RIGHT,
-		.jumpTime = 0,
-		.weapon = pistol
-	};
-
-	_elements.enemy = actor;
-	_elements.bullet = actor;
-	_elements.crate = crate;
-	_elements.player = player;
-	_elements.pistol = pistol;
-}
-
 void tick(){
 	updateBullets();
 	updateEnemies();
 	updatePlayer();
 	updateCrate();
 	_tickCount++;
-}
-
-int abs(int val){
-	if(val < 0)
-		return val * -1;
-	return val;
-}
-
-int collision(Geometry_t g1, Geometry_t g2){
-	int sumRad = g1.rad + g2.rad;
-	return abs(g1.y - g2.y + 1) < sumRad && abs(g1.x - g2.x + 1) < sumRad;
 }
 
 void updateCrate(){
@@ -153,6 +81,25 @@ void spawnEnemy(){
 	}
 }
 
+void enemyMove(Actor_t * enem) {
+	if(_tickCount % ENEM_DELAY == 0) {
+		if(enem->geo.y >= MAP_HEIGHT) {
+			enem->geo.y = 0;
+			enem->dirMotion *= -1;
+		}
+
+		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x <= 1) {
+			enem->dirMotion *= -1;
+		} 
+
+		enem->geo.x += enem->dirMotion;
+
+		if(!onSurface(enem->geo)) {
+			enem->geo.y += G;
+		}
+	}
+}
+
 void updateBullets(){
 	int bull, enem;
 	for(bull = 0; bull < _numBullets; bull++){
@@ -179,20 +126,16 @@ void spawnBullet(){
 	}
 }
 
-void expireActors(Actor_t * actors, int * numAct) {
-	int act;
-	for(act = 0; act < *numAct; act++)
-		if(!actors[act].alive) {
-			int shift;
-			for(shift = act; shift <= *numAct; shift++)
-				actors[shift] = actors[shift + 1];
-			(*numAct)--;
-		}
-}
+void bulletMove(Actor_t * bull) {
+	if(_tickCount % BULL_DELAY == 0) {
+		int inSurface = mapBuf[bull->geo.y - 1][bull->geo.x] == SPRITE_SURFACE;
 
-void clearKeys() {
-	Keys_t keys = {0};
-	_keys = keys;
+		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || inSurface) {
+			bull->alive = 0;
+		}
+
+		bull->geo.x += bull->dirMotion;
+	}
 }
 
 void updateKeys() {
@@ -236,14 +179,6 @@ void updatePlayer(){
 	gravity();
 }
 
-int onSurface(Geometry_t geo) {
-	return mapBuf[geo.y][geo.x - 1] == SPRITE_SURFACE;
-}
-
-int belowSurface(Geometry_t geo) {
-	return mapBuf[geo.y - 2][geo.x - 1] == SPRITE_SURFACE;
-}
-
 void moveUp() {
 	if(onSurface(_player.geo) && _player.geo.y > 0) {
 		audio(JUMP);
@@ -268,52 +203,6 @@ void moveRight() {
 void moveDown() {
 	if(!onSurface(_player.geo))
 		_player.geo.y += G;
-}
-
-void gravity() {
-	if(_tickCount % GRAVITY_DELAY_TICKS == 0) {
-		if(belowSurface(_player.geo))
-			_player.jumpTime = 0;
-
-		if(_player.jumpTime) {
-			_player.geo.y -= G;
-			_player.jumpTime -= 1;
-		} else if(!onSurface(_player.geo)) {
-			_player.geo.y += G;
-		}
-	}
-}
-
-void enemyMove(Actor_t * enem) {
-	if(_tickCount % ENEM_DELAY == 0) {
-		if(enem->geo.y >= MAP_HEIGHT) {
-			enem->geo.y = 0;
-			enem->dirMotion *= -1;
-		}
-
-		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x <= 1) {
-			enem->dirMotion *= -1;
-		} 
-
-		enem->geo.x += enem->dirMotion;
-
-		if(!onSurface(enem->geo)) {
-			enem->geo.y += G;
-		}
-	}
-
-}
-
-void bulletMove(Actor_t * bull) {
-	if(_tickCount % BULL_DELAY == 0) {
-		int inSurface = mapBuf[bull->geo.y - 1][bull->geo.x] == SPRITE_SURFACE;
-
-		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || inSurface) {
-			bull->alive = 0;
-		}
-
-		bull->geo.x += bull->dirMotion;
-	}
 }
 
 int main(){
