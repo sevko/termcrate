@@ -1,3 +1,5 @@
+#pragma once
+
 /* 
  * Macros
  */
@@ -107,6 +109,8 @@ void expireActors(Actor_t actors[], int * numAct);
 void clearKeys();
 void updateKeys();
 void updatePlayer();
+int onSurface(Geometry_t geo);
+int belowSurface(Geometry_t geo);
 
 int surfaceBottom(Geometry_t geo);
 int surfaceTop(Geometry_t geo);
@@ -122,4 +126,4 @@ void gravity();
 void enemyMove(Actor_t * enem);
 void bulletMove(Actor_t * bull);
 
-void main();
+int main();

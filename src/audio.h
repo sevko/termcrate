@@ -1,3 +1,5 @@
+#pragma once
+
 #define AUD_PATH "res/audio/"
 
 #define THEME AUD_PATH "themeGame.wav"

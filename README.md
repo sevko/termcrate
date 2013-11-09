@@ -24,6 +24,6 @@
     F1 - quit
 
 ###Instructions
-	Acquire as many crates as possible, each of which contains a new weapon pickup 
+Acquire as many crates as possible, each of which contains a new weapon pickup 
 and increments your score; kill off encroaching enemies with your
 firearm.

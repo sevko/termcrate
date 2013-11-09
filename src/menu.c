@@ -4,6 +4,7 @@
 #include "termcrate.h"
 #include "menu.h"
 #include "audio.h"
+#include "graphics.h"
 
 #include "../xterm/keyboard.h"
 

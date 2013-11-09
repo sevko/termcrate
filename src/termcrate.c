@@ -5,6 +5,7 @@
 #include "termcrate.h"
 #include "graphics.h"
 #include "audio.h"
+#include "menu.h"
 
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
@@ -49,12 +50,7 @@ void config(){
 	_player = _elements.player;
 	_crate = _elements.crate;
 
-	Keys_t keys = {
-		.up = 0,
-		.left = 0,
-		.right = 0,
-		.fire = 0
-	};
+	Keys_t keys = { 0 };
 	_keys = keys;
 
 	audio(THEME);
@@ -69,9 +65,6 @@ void loadWeapons(){
 	_weapons[2] = machineGun;
 }
 
-//populates _elements with an instance of each 
-//element struct with default variable initializations;
-//makes future creation of new structs cleaner.
 void loadElements(){
 	Geometry_t geo = {
 		.x = 1, 
@@ -99,7 +92,6 @@ void loadElements(){
 	_elements.bullet = actor;
 	_elements.crate = crate;
 	_elements.player = player;
-
 	_elements.pistol = pistol;
 }
 
@@ -147,10 +139,8 @@ void updateEnemies(){
 			_gameLost = 1;
 			break;
 		}
-
 		enemyMove(mob);
 	}
-
 	spawnEnemy();
 	expireActors(_enemies, &_numEnemies);
 }
@@ -169,25 +159,24 @@ void updateBullets(){
 		Actor_t * ammo = &_bullets[bull];
 		for(enem = 0; enem < _numEnemies; enem++) {
 			Actor_t * mob = &_enemies[enem];
-			if(collision(ammo->geo, mob->geo)){
+			if(collision(ammo->geo, mob->geo))
 				ammo->alive = mob->alive = 0;
-			}
 		}
 		bulletMove(ammo);
 	}
 	expireActors(_bullets, &_numBullets);
 }
 
-void spawnBullet(int dir){
+void spawnBullet(){
 	audio(GUNSHOT);
 	if(_numBullets < MAX_BULLETS) {
 		Actor_t bull = _elements.bullet;
 		bull.geo.x = _player.geo.x;
 		bull.geo.y = _player.geo.y;
-		bull.dirMotion = dir;
+		bull.dirMotion = _player.dirMotion;
 		addActor(0, bull);
+		_player.reload = 0;
 	}
-	_player.reload = 0;
 }
 
 void expireActors(Actor_t * actors, int * numAct) {
@@ -218,9 +207,8 @@ void updateKeys() {
 		if(key == MOVE_RIGHT)
 			_keys.right = 1;
 
-		if(key == FIRE){
+		if(key == FIRE)
 			_keys.fire = 1;
-		}
 
 		if(key == QUIT)
 			_gameLost = 1;
@@ -249,11 +237,11 @@ void updatePlayer(){
 }
 
 int onSurface(Geometry_t geo) {
-	return mapBuf[geo.y][geo.x - 1] == '@';
+	return mapBuf[geo.y][geo.x - 1] == SPRITE_SURFACE;
 }
 
 int belowSurface(Geometry_t geo) {
-	return mapBuf[geo.y - 2][geo.x - 1] == '@';
+	return mapBuf[geo.y - 2][geo.x - 1] == SPRITE_SURFACE;
 }
 
 void moveUp() {
@@ -318,7 +306,7 @@ void enemyMove(Actor_t * enem) {
 
 void bulletMove(Actor_t * bull) {
 	if(_tickCount % BULL_DELAY == 0) {
-		int inSurface = mapBuf[bull->geo.y - 1][bull->geo.x] == '@';
+		int inSurface = mapBuf[bull->geo.y - 1][bull->geo.x] == SPRITE_SURFACE;
 
 		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || inSurface) {
 			bull->alive = 0;
@@ -328,6 +316,7 @@ void bulletMove(Actor_t * bull) {
 	}
 }
 
-void main(){
+int main(){
 	menu();
+	return EXIT_SUCCESS;
 }
