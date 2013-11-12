@@ -44,6 +44,66 @@
 \n| ||_|| |   _   |     |_|   _   |   | | |   |   |___  |   |_| |       | | |   |\
 \n|_|   |_|__| |__|_______|__| |__|___|_|  |__|_______| |_______|_______|_|  |__|"
 
+#define ASCII_0 "\
+\n ___ \
+\n|   |\
+\n| | |\
+\n|___|"
+
+#define ASCII_1 "\
+\n  _\
+\n | |\
+\n | |\
+\n |_|"
+
+#define ASCII_2 "\
+\n ___\
+\n|_  |\
+\n|  _|\
+\n|___|"
+
+#define ASCII_3 "\
+\n ___\
+\n|_  |\
+\n|_  |\
+\n|___|"
+
+#define ASCII_4 "\
+\n ___\
+\n| | |\
+\n|_  |\
+\n  |_|"
+
+#define ASCII_5 "\
+\n ___\
+\n|  _|\
+\n|_  |\
+\n|___|"
+
+#define ASCII_6 "\
+\n ___\
+\n|  _|\
+\n| . |\
+\n|___|"
+
+#define ASCII_7 "\
+\n ___\
+\n|_  |\
+\n  | |\
+\n  |_|"
+
+#define ASCII_8 "\
+\n ___\
+\n| . |\
+\n| . |\
+\n|___|"
+
+#define ASCII_9 "\
+\n ___\
+\n| . |\
+\n|_  |\
+\n|___|"
+
 #define COLOR_BUTTON XT_CH_BLUE
 #define COLOR_SELECTED_BUTTON XT_BG_RED
 #define COLOR_ENEMY XT_CH_GREEN
@@ -56,6 +116,7 @@ void renderMenu();
 void renderMap();
 void renderActors();
 void renderMessages();
+void renderScore();
 
 void addActor(int enem, Actor_t newActor);
 void drawSprite(char * sprite, char * color);

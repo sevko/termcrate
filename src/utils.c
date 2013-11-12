@@ -23,6 +23,8 @@ extern Keys_t _keys;
 extern int _numEnemies, _numBullets;
 extern int _gameLost, _tickCount;
 
+char * _numberSprites[10];
+
 void config(){
 	_numEnemies = 0;
 	_numBullets = 0;
@@ -33,6 +35,7 @@ void config(){
 	loadElements();
 	loadWeapons();
 	loadMessages();
+	loadNumbers();
 	resetCrate();
 
 	_player = _elements.player;
@@ -55,7 +58,7 @@ void loadWeapons(){
 
 void loadElements(){
 	Geometry_t geo = {
-		.x = 1, 
+		.x = 10, 
 		.y = 5, 
 		.rad = 1
 	};
@@ -73,7 +76,8 @@ void loadElements(){
 		.geo = geo,
 		.dirMotion = RIGHT,
 		.jumpTime = 0,
-		.weapon = pistol
+		.weapon = pistol,
+		.score = 0
 	};
 
 	_elements.enemy = actor;
@@ -97,6 +101,19 @@ void loadMessages(){
 	_messages[0] = pistol;
 	_messages[1] = shotgun;
 	_messages[2] = machinegun;
+}
+
+void loadNumbers(){
+	_numberSprites[0] = ASCII_0;
+	_numberSprites[1] = ASCII_1;
+	_numberSprites[2] = ASCII_2;
+	_numberSprites[3] = ASCII_3;
+	_numberSprites[4] = ASCII_4;
+	_numberSprites[5] = ASCII_5;
+	_numberSprites[6] = ASCII_6;
+	_numberSprites[7] = ASCII_7;
+	_numberSprites[8] = ASCII_8;
+	_numberSprites[9] = ASCII_9;
 }
 
 int abs(int val){

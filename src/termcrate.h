@@ -64,6 +64,7 @@ typedef struct {
 	int dirMotion;
 	int reload;
 	int jumpTime;
+	int score;
 } Player_t;
 
 typedef struct {
@@ -95,6 +96,8 @@ void tick();
 
 void updateCrate();
 void resetCrate();
+
+void resetMessage();
 
 void updateEnemies();
 void spawnEnemy();

@@ -20,6 +20,7 @@ Actor_t _bullets[MAX_BULLETS + 1];
 Crate_t _crate;
 Player_t _player;
 Keys_t _keys;
+
 Message_t _messages[3];
 
 int _numEnemies, _numBullets;
@@ -49,6 +50,7 @@ void updateCrate(){
 
 	if(collision(_crate.geo, _player.geo)){
 		_player.weapon = _crate.weapon;
+		_player.score++;
 		resetMessage();
 		resetCrate();
 	}

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <math.h>
 
 #include "termcrate.h"
 #include "graphics.h"
@@ -16,6 +18,7 @@ extern Actor_t _bullets[MAX_BULLETS + 1];
 extern Crate_t _crate;
 extern Player_t _player;
 extern Message_t _messages[3];
+extern char * _numberSprites[10];
 
 extern int _numEnemies;
 extern int _numBullets;
@@ -30,6 +33,7 @@ void render(){
 	renderMap();
 	renderActors();
 	renderMessages();
+	renderScore();
 	resetCursor();
 }
 
@@ -97,6 +101,25 @@ void renderMessages() {
 	if(_messages[2].display) {
 		drawMessage(&_messages[2]);
 	}
+}
+
+void renderScore(){
+	int score = _player.score;
+	int numDig = (int)log10(score) + 1;
+
+	int dig;
+	for(dig = numDig - 1; dig >= 0; dig--){
+		int xPos = 50;
+		/*int xPos = MAP_WIDTH / 2 - numDig * 5 / 2 + (numDig - dig - 1) * 5;*/
+		xt_par2(XT_SET_ROW_COL_POS, MAP_HEIGHT * 0.1, xPos);
+		drawSprite(_numberSprites[score % 10], XT_CH_WHITE);
+		score %= 10;
+	}
+
+	/*xt_par2(XT_SET_ROW_COL_POS, MAP_HEIGHT * 0.1, MAP_WIDTH / 2);*/
+	/*char sprite[10];*/
+	/*sprintf(sprite, "%d", _player.score);*/
+	/*drawSprite(sprite, XT_CH_WHITE);*/
 }
 
 void addActor(int enem, Actor_t newActor){

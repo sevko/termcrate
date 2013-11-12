@@ -5,6 +5,7 @@ void config();
 void loadWeapons();
 void loadElements();
 void loadMessages();
+void loadNumbers();
 
 int abs(int val);
 int collision(Geometry_t g1, Geometry_t g2);
