@@ -1,3 +1,5 @@
+#pragma once
+
 /* 
  * Macros
  */
@@ -15,7 +17,7 @@
 #define G 1
 
 #define PLAYER_DELAY 1
-#define JUMP_HEIGHT 15
+#define JUMP_HEIGHT 10
 
 #define ENEM_DELAY 2
 #define ENEMY_RADIUS 1
@@ -89,29 +91,17 @@ typedef struct {
  */
 
 void game();
-void config();
-
-void loadWeapons();
-void loadElements();
-void loadMessages();
-
 void tick();
-
-int abs(int val);
-int collision(Geometry_t g1, Geometry_t g2);
 
 void updateCrate();
 void resetCrate();
 
 void updateEnemies();
 void spawnEnemy();
-void expireEnemies();
 
 void updateBullets();
 void spawnBullet();
-void expireBullets();
 
-void clearKeys();
 void updateKeys();
 void updatePlayer();
 
@@ -124,9 +114,8 @@ void moveUp();
 void moveLeft();
 void moveRight();
 void moveDown();
-void gravity();
 
 void enemyMove(Actor_t * enem);
 void bulletMove(Actor_t * bull);
 
-void main();
+int main();

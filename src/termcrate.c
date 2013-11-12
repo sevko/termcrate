@@ -3,8 +3,10 @@
 #include <stdlib.h>
 
 #include "termcrate.h"
+#include "utils.h"
 #include "graphics.h"
 #include "audio.h"
+#include "menu.h"
 
 #include "../xterm/keyboard.h"
 #include "../xterm/xterm_control.h"
@@ -20,11 +22,8 @@ Player_t _player;
 Keys_t _keys;
 Message_t _messages[3];
 
-int _numEnemies;
-int _numBullets;
-
-int _gameLost;
-int _tickCount;
+int _numEnemies, _numBullets;
+int _gameLost, _tickCount;
 
 char * pistolMessage = "______ _     _        _             __\n | ___ (_)   | |      | |    _      / /\n | |_/ /_ ___| |_ ___ | |   (_)    / / \n |  __/| / __| __/ _ \\| |         / /  \n | |   | \\__ \\ || (_) | |    _   / /   \n \\_|   |_|___/\\__\\___/|_|   (_) /_/    \n";
 char * shotgunMessage = "_____ _           _                      _ \n /  ___| |         | |                    | |\n \\ `--.| |__   ___ | |_ __ _ _   _ _ __   | |\n `--. \\ '_ \\ / _ \\| __/ _` | | | | '_ \\  | |\n /\\__/ / | | | (_) | || (_| | |_| | | | | |_|\n \\____/|_| |_|\\___/ \\__\\__, |\\__,_|_| |_| (_)\n __/ |                \n |___/                 \n";
@@ -36,76 +35,7 @@ void game(){
 		render();
 		tick();
 	}
-	audio(DEAD);
-}
-
-void config(){
-	_numEnemies = 0;
-	_numBullets = 0;
-	_gameLost = 0;
-	_tickCount = 0;
-
-	loadMap();
-	loadElements();
-	loadWeapons();
-	loadMessages();
-	resetCrate();
-
-	_player = _elements.player;
-	_crate = _elements.crate;
-
-	Keys_t keys = {
-		.up = 0,
-		.left = 0,
-		.right = 0,
-		.fire = 0
-	};
-	_keys = keys;
-
-	audio(THEME);
-}
-
-void loadWeapons(){
-	Weapon_t shotgun = { .ammo = 20, .rof = 30 };
-	Weapon_t machineGun = { .ammo = 100, .rof = 2 };
-
-	_weapons[0] = _elements.pistol;
-	_weapons[1] = shotgun;
-	_weapons[2] = machineGun;
-}
-
-//populates _elements with an instance of each 
-//element struct with default variable initializations;
-//makes future creation of new structs cleaner.
-void loadElements(){
-	Geometry_t geo = {
-		.x = 1, 
-		.y = 5, 
-		.rad = 1
-	};
-
-	Actor_t actor = {
-		.geo = geo,
-		.dirMotion = RIGHT,
-		.alive = 1
-	};
-
-	Weapon_t pistol = { .ammo = 1000000, .rof = 15 };
-	Crate_t crate = { .geo = geo, .weapon = pistol};
-
-	Player_t player = { 
-		.geo = geo,
-		.dirMotion = RIGHT,
-		.jumpTime = 0,
-		.weapon = pistol
-	};
-
-	_elements.enemy = actor;
-	_elements.bullet = actor;
-	_elements.crate = crate;
-	_elements.player = player;
-
-	_elements.pistol = pistol;
+	menu();
 }
 
 void loadMessages(){
@@ -132,17 +62,6 @@ void tick(){
 	_tickCount++;
 }
 
-int abs(int val){
-	if(val < 0)
-		return val * -1;
-	return val;
-}
-
-int collision(Geometry_t g1, Geometry_t g2){
-	int sumRad = g1.rad + g2.rad;
-	return abs(g1.y - g2.y + 1) < sumRad && abs(g1.x - g2.x + 1) < sumRad;
-}
-
 void updateCrate(){
 	if(!onSurface(_crate.geo))
 		_crate.geo.y++;
@@ -154,6 +73,7 @@ void updateCrate(){
 }
 
 void resetCrate(){
+	audio(CRATE);
 	_crate.geo.x = rand() % MAP_WIDTH;
 	_crate.geo.y = rand() % MAP_HEIGHT;
 	_crate.weapon = _weapons[rand() % NUM_WEAPONS];
@@ -173,12 +93,10 @@ void updateEnemies(){
 			_gameLost = 1;
 			break;
 		}
-
 		enemyMove(mob);
 	}
-
 	spawnEnemy();
-	expireEnemies();
+	expireActors(_enemies, &_numEnemies);
 }
 
 void spawnEnemy(){
@@ -189,16 +107,21 @@ void spawnEnemy(){
 	}
 }
 
-void expireEnemies() {
-	int enem;
-	for(enem = 0; enem < _numEnemies; enem++){
-		Actor_t * mob = &_enemies[enem];
-		if(mob->alive == 0) {
-			int i;
-			for(i = enem; i <= _numEnemies; i++)
-				_enemies[i] = _enemies[i + 1];
+void enemyMove(Actor_t * enem) {
+	if(_tickCount % ENEM_DELAY == 0) {
+		if(enem->geo.y >= MAP_HEIGHT) {
+			enem->geo.y = 0;
+			enem->dirMotion *= -1;
+		}
 
-			_numEnemies--;
+		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x <= 1) {
+			enem->dirMotion *= -1;
+		} 
+
+		enem->geo.x += enem->dirMotion;
+
+		if(!onSurface(enem->geo)) {
+			enem->geo.y += G;
 		}
 	}
 }
@@ -209,52 +132,36 @@ void updateBullets(){
 		Actor_t * ammo = &_bullets[bull];
 		for(enem = 0; enem < _numEnemies; enem++) {
 			Actor_t * mob = &_enemies[enem];
-			if(collision(ammo->geo, mob->geo)){
+			if(collision(ammo->geo, mob->geo))
 				ammo->alive = mob->alive = 0;
-			}
 		}
-
 		bulletMove(ammo);
 	}
-
-	expireBullets();
+	expireActors(_bullets, &_numBullets);
 }
 
-void expireBullets() {
-	int bull;
-	for(bull = 0; bull < _numBullets; bull++){
-		Actor_t * ammo = &_bullets[bull];
-
-		if(ammo->alive == 0) {
-			int i;
-			for(i = bull; i <= _numBullets; i++)
-				_bullets[i] = _bullets[i + 1];
-
-			_numBullets--;
-		}
-	}
-}
-
-void spawnBullet(int dir){
+void spawnBullet(){
 	audio(GUNSHOT);
 	if(_numBullets < MAX_BULLETS) {
 		Actor_t bull = _elements.bullet;
 		bull.geo.x = _player.geo.x;
 		bull.geo.y = _player.geo.y;
-		bull.dirMotion = dir;
+		bull.dirMotion = _player.dirMotion;
 		addActor(0, bull);
+		_player.reload = 0;
 	}
-	_player.reload = 0;
 }
 
-void clearKeys() {
-	Keys_t keys = {
-		.up = 0,
-		.left = 0,
-		.right = 0,
-		.fire = 0
-	};
-	_keys = keys;
+void bulletMove(Actor_t * bull) {
+	if(_tickCount % BULL_DELAY == 0) {
+		int inSurface = mapBuf[bull->geo.y - 1][bull->geo.x] == SPRITE_SURFACE;
+
+		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || inSurface) {
+			bull->alive = 0;
+		}
+
+		bull->geo.x += bull->dirMotion;
+	}
 }
 
 void updateKeys() {
@@ -269,9 +176,8 @@ void updateKeys() {
 		if(key == MOVE_RIGHT)
 			_keys.right = 1;
 
-		if(key == FIRE){
+		if(key == FIRE)
 			_keys.fire = 1;
-		}
 
 		if(key == QUIT)
 			_gameLost = 1;
@@ -297,14 +203,6 @@ void updatePlayer(){
 		_player.reload += 1;
 	}
 	gravity();
-}
-
-int onSurface(Geometry_t geo) {
-	return mapBuf[geo.y][geo.x - 1] == '@';
-}
-
-int belowSurface(Geometry_t geo) {
-	return mapBuf[geo.y - 2][geo.x - 1] == '@';
 }
 
 void moveUp() {
@@ -333,52 +231,7 @@ void moveDown() {
 		_player.geo.y += G;
 }
 
-void gravity() {
-	if(_tickCount % GRAVITY_DELAY_TICKS == 0) {
-		if(belowSurface(_player.geo))
-			_player.jumpTime = 0;
-
-		if(_player.jumpTime) {
-			_player.geo.y -= G;
-			_player.jumpTime -= 1;
-		} else if(!onSurface(_player.geo)) {
-			_player.geo.y += G;
-		}
-	}
-}
-
-void enemyMove(Actor_t * enem) {
-	if(_tickCount % ENEM_DELAY == 0) {
-		if(enem->geo.y >= MAP_HEIGHT) {
-			enem->geo.y = 0;
-			enem->dirMotion *= -1;
-		}
-
-		if(enem->geo.x >= MAP_WIDTH - 1 || enem->geo.x <= 1) {
-			enem->dirMotion *= -1;
-		} 
-
-		enem->geo.x += enem->dirMotion;
-
-		if(!onSurface(enem->geo)) {
-			enem->geo.y += G;
-		}
-	}
-
-}
-
-void bulletMove(Actor_t * bull) {
-	if(_tickCount % BULL_DELAY == 0) {
-		int inSurface = mapBuf[bull->geo.y - 1][bull->geo.x] == '@';
-
-		if(bull->geo.x >= MAP_WIDTH || bull->geo.x <= 0 || inSurface) {
-			bull->alive = 0;
-		}
-
-		bull->geo.x += bull->dirMotion;
-	}
-}
-
-void main(){
+int main(){
 	menu();
+	return EXIT_SUCCESS;
 }

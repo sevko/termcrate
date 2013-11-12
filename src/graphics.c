@@ -35,6 +35,14 @@ void render(){
 
 void renderMenu(){
 	clearScreen();
+
+	xt_par0(XT_CH_BOLD);
+	xt_par0(XT_BG_RED);
+	xt_par0(XT_CH_YELLOW);
+	xt_par2(XT_SET_ROW_COL_POS, 3, 50);
+	printf("%s", SPRITE_MENU);
+	xt_par0(XT_CH_NORMAL);
+
 	int button;
 	for(button = 0; button < NUM_BUTTONS; button++){
 		Button_t but = _buttons[button];
@@ -44,7 +52,7 @@ void renderMenu(){
 
 		xt_par0(XT_CH_BOLD);
 		xt_par0(COLOR_BUTTON);
-		printf(but.name);
+		printf("%s", but.name);
 		xt_par0(XT_CH_NORMAL);
 	}
 	xt_par2(XT_SET_ROW_COL_POS, 1, 1);
@@ -104,7 +112,7 @@ void addActor(int enem, Actor_t newActor){
 void drawSprite(char * sprite, char * color){
 	xt_par0(XT_CH_BOLD);
 	xt_par0(color);
-	printf(sprite);
+	printf("%s", sprite);
 	xt_par0(XT_CH_NORMAL);
 }
 
@@ -139,5 +147,6 @@ void loadMap(){
 
 	int row;
 	for(row = 0; row < MAP_HEIGHT; row++)
-		fgets(mapBuf[row], MAP_BUF_WIDTH, map);
+		if(!fgets(mapBuf[row], MAP_BUF_WIDTH, map))
+			break;
 }

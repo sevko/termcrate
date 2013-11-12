@@ -4,6 +4,7 @@
 #include "termcrate.h"
 #include "menu.h"
 #include "audio.h"
+#include "graphics.h"
 
 #include "../xterm/keyboard.h"
 
@@ -32,6 +33,7 @@ void menu(){
 }
 
 void configMenu(){
+	stopAudio();
 	Button_t play = {
 		.x = (BUTTON_X - 2), //center, account for name length
 		.y = 16,
@@ -62,6 +64,7 @@ void menuMoveDown(){
 
 void buttonFunction(){
 	stopAudio();
+	audio(BUTTON);
 	if(_selectedButton == PLAY)
 		game();
 
