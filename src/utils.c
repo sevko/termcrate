@@ -14,6 +14,7 @@
 extern char mapBuf[MAP_HEIGHT][MAP_BUF_WIDTH];
 extern Weapon_t _weapons[NUM_WEAPONS];
 extern Elements_t _elements;
+extern Message_t _messages[3];
 
 extern Crate_t _crate;
 extern Player_t _player;
@@ -31,6 +32,7 @@ void config(){
 	loadMap();
 	loadElements();
 	loadWeapons();
+	loadMessages();
 	resetCrate();
 
 	_player = _elements.player;
@@ -79,6 +81,22 @@ void loadElements(){
 	_elements.crate = crate;
 	_elements.player = player;
 	_elements.pistol = pistol;
+}
+
+void loadMessages(){
+	Geometry_t geo = {
+		.x = 55, 
+		.y = 18, 
+		.rad = 1
+	};
+	 
+	Message_t pistol = {.text = PISTOL_MESSAGE, .display = 0, .geo = geo};
+	Message_t shotgun = {.text = SHOTGUN_MESSAGE, .display = 0, .geo = geo};
+	Message_t machinegun = {.text = MACHINEGUN_MESSAGE, .display = 0, .geo = geo};
+	 
+	_messages[0] = pistol;
+	_messages[1] = shotgun;
+	_messages[2] = machinegun;
 }
 
 int abs(int val){

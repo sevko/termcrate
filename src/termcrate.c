@@ -25,9 +25,6 @@ Message_t _messages[3];
 int _numEnemies, _numBullets;
 int _gameLost, _tickCount;
 
-char * pistolMessage = "______ _     _        _             __\n | ___ (_)   | |      | |    _      / /\n | |_/ /_ ___| |_ ___ | |   (_)    / / \n |  __/| / __| __/ _ \\| |         / /  \n | |   | \\__ \\ || (_) | |    _   / /   \n \\_|   |_|___/\\__\\___/|_|   (_) /_/    \n";
-char * shotgunMessage = "_____ _           _                      _ \n /  ___| |         | |                    | |\n \\ `--.| |__   ___ | |_ __ _ _   _ _ __   | |\n `--. \\ '_ \\ / _ \\| __/ _` | | | | '_ \\  | |\n /\\__/ / | | | (_) | || (_| | |_| | | | | |_|\n \\____/|_| |_|\\___/ \\__\\__, |\\__,_|_| |_| (_)\n __/ |                \n |___/                 \n";
-char * machinegunMessage = "___  ___           _     _              _____                _\n |  \\/  |          | |   (_)            |  __ \\              | |\n | .  . | __ _  ___| |__  _ _ __   ___  | |  \\/_   _ _ __    | |\n | |\\/| |/ _` |/ __| '_ \\| | '_ \\ / _ \\ | | __| | | | '_ \\   | |\n | |  | | (_| | (__| | | | | | | |  __/ | |_\\ \\ |_| | | | |  |_|\n \\_|  |_/\\__,_|\\___|_| |_|_|_| |_|\\___|  \\____/\\__,_|_| |_|  (_)\n";
 void game(){
 	config();
 	while(!_gameLost){
@@ -36,22 +33,6 @@ void game(){
 		tick();
 	}
 	menu();
-}
-
-void loadMessages(){
-	Geometry_t geo = {
-		.x = 60, 
-		.y = 18, 
-		.rad = 1
-	};
-
-	Message_t pistol = {.text = pistolMessage, .display = 0, .geo = geo};
-	Message_t shotgun = {.text = shotgunMessage, .display = 0, .geo = geo};
-	Message_t machinegun = {.text = machinegunMessage, .display = 0, .geo = geo};
-
-	_messages[0] = pistol;
-	_messages[1] = shotgun;
-	_messages[2] = machinegun;
 }
 
 void tick(){
@@ -68,6 +49,7 @@ void updateCrate(){
 
 	if(collision(_crate.geo, _player.geo)){
 		_player.weapon = _crate.weapon;
+		resetMessage();
 		resetCrate();
 	}
 }
@@ -77,6 +59,9 @@ void resetCrate(){
 	_crate.geo.x = rand() % MAP_WIDTH;
 	_crate.geo.y = rand() % MAP_HEIGHT;
 	_crate.weapon = _weapons[rand() % NUM_WEAPONS];
+}
+
+void resetMessage(){
 	if(_crate.weapon.rof == 2)
 		_messages[2].display = 75;
 	if(_crate.weapon.rof == 15)

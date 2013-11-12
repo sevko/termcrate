@@ -39,8 +39,7 @@ void renderMenu(){
 	xt_par0(XT_CH_BOLD);
 	xt_par0(XT_BG_RED);
 	xt_par0(XT_CH_YELLOW);
-	xt_par2(XT_SET_ROW_COL_POS, 3, 50);
-	printf("%s", SPRITE_MENU);
+	drawString(SPRITE_MENU, 50, 3);
 	xt_par0(XT_CH_NORMAL);
 
 	int button;
@@ -116,21 +115,27 @@ void drawSprite(char * sprite, char * color){
 	xt_par0(XT_CH_NORMAL);
 }
 
-void drawMessage(Message_t * message) {
+void drawString(char * text, int x, int y) {
 	int row = 0, col = 0 , len = 0;
-	char * text = message->text;
 	while(len < strlen(text)) {
 		if(text[len] == '\n'){
 			row++;
 			col = 0;
 		} else {
-			xt_par2(XT_SET_ROW_COL_POS, message->geo.y + row, message->geo.x + col);
+			xt_par2(XT_SET_ROW_COL_POS, y + row, x + col);
 			printf("%c", text[len]);
 			col++;
 		}
 		len++;
 	}
-	message->display -= 1;
+}
+
+void drawMessage(Message_t * message) {
+    xt_par0(XT_CH_BOLD);
+    xt_par0(XT_CH_RED);
+    drawString(message->text, message->geo.x, message->geo.y);
+    message->display -= 1;
+    xt_par0(XT_CH_NORMAL);
 }
 
 void clearScreen(){
