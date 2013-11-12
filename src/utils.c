@@ -85,7 +85,7 @@ void loadElements(){
 
 void loadMessages(){
 	Geometry_t geo = {
-		.x = 55, 
+		.x = 50, 
 		.y = 18, 
 		.rad = 1
 	};
