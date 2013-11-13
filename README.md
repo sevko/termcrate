@@ -9,7 +9,7 @@
 `termcrate` is a terminal port of the popular Super Crate Box.
 
 ###Installation
-`make termcrate`
+`make`
 
 ###Usage
 `make run`
@@ -23,5 +23,4 @@
 
 ###Instructions
 Acquire as many crates as possible, each of which contains a new weapon pickup 
-and increments your score; kill off encroaching enemies with your
-firearm.
+and increments your score; kill off encroaching enemies with your firearm.

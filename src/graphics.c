@@ -1,3 +1,7 @@
+/*
+ * Contains functions for graphics manipulation.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,19 +109,14 @@ void renderMessages() {
 
 void renderScore(){
 	int score = _player.score;
-	int numDig = (int)log10(score);
+	int numDig = (int)log10(score) + 1;
 
 	int dig;
-	for(dig = numDig; dig >= 0; dig--){
-		int xPos = MAP_WIDTH / 2 - numDig * 5 / 2 + (numDig - dig - 1) * 5;
+	for(dig = numDig - 1; dig >= 0; dig--){
+		int xPos = MAP_WIDTH / 2 + numDig * 5 / 2 - (numDig - dig - 1) * 5;
 		drawString(_numberSprites[score % 10], xPos, MAP_HEIGHT * 0.1);
 		score /= 10;
 	}
-
-	/*xt_par2(XT_SET_ROW_COL_POS, MAP_HEIGHT * 0.1, MAP_WIDTH / 2);*/
-	/*char sprite[10];*/
-	/*sprintf(sprite, "%d", _player.score);*/
-	/*drawSprite(sprite, XT_CH_WHITE);*/
 }
 
 void addActor(int enem, Actor_t newActor){

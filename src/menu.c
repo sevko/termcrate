@@ -1,3 +1,7 @@
+/*
+ * Contains functions for managing the game menu.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -1,3 +1,8 @@
+/*
+ * Contains all miscellaneous processing functions, including configuration
+ * and startup handlers.
+*/
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -36,7 +41,6 @@ void config(){
 	loadWeapons();
 	loadMessages();
 	loadNumbers();
-	resetCrate();
 
 	_player = _elements.player;
 	_crate = _elements.crate;
@@ -44,6 +48,7 @@ void config(){
 	Keys_t keys = { 0 };
 	_keys = keys;
 
+	resetCrate();
 	audio(THEME);
 }
 

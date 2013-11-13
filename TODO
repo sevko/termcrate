@@ -1,2 +1,0 @@
-- Move every actor in increments of 1, update based on frame rate
-- Limit the key repeat for bullets and player movement

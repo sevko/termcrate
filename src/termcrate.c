@@ -1,6 +1,11 @@
+/*
+ * Game engine; core source file.
+*/
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "termcrate.h"
 #include "utils.h"
@@ -58,6 +63,8 @@ void updateCrate(){
 
 void resetCrate(){
 	audio(CRATE);
+
+	srand(time(NULL));
 	_crate.geo.x = rand() % MAP_WIDTH;
 	_crate.geo.y = rand() % MAP_HEIGHT;
 	_crate.weapon = _weapons[rand() % NUM_WEAPONS];
