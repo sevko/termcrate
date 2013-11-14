@@ -1,5 +1,5 @@
-CC = gcc -Ofast -Wall
-xterm = xterm -geom 176x44 -name termcrate
+CC = gcc
+xterm = xterm -geom 176x44 -bg black -name termcrate
 
 all: build build/termcrate.o build/utils.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o
 	$(CC) build/termcrate.o build/utils.o build/graphics.o build/audio.o build/menu.o build/xterm_control.o build/keyboard.o -o termcrate -lm

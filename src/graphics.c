@@ -36,8 +36,8 @@ void render(){
 	clearScreen();
 	renderMap();
 	renderActors();
-	renderMessages();
 	renderScore();
+	renderMessages();
 	resetCursor();
 }
 
@@ -112,11 +112,13 @@ void renderScore(){
 	int numDig = (int)log10(score) + 1;
 
 	int dig;
+	xt_par0(XT_CH_WHITE);
 	for(dig = numDig - 1; dig >= 0; dig--){
 		int xPos = MAP_WIDTH / 2 + numDig * 5 / 2 - (numDig - dig - 1) * 5;
 		drawString(_numberSprites[score % 10], xPos, MAP_HEIGHT * 0.1);
 		score /= 10;
 	}
+	xt_par0(XT_CH_NORMAL);
 }
 
 void addActor(int enem, Actor_t newActor){
